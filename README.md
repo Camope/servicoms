@@ -10,7 +10,7 @@ Una solicitud es una entidad con las propiedades: id, fecha de solicitud, idComi
 
 ## Diagrama de clases de diseño
 
-![Diagrama de Diseño MVP](https://git.institutomilitar.com/Awes0meM4n/proyecto-individual-datos-deportivos/-/wikis/img/diagrama-mvp-individual.jpg)
+![Diagrama de Diseño MVP](https://git.institutomilitar.com/PedroggDIM/comisiones/-/wikis/uploads/0a07745b719db2ed16094117dfadde98/Diagrama_de_clases.png)
 
 
 **Cumplimiento de requisitos**
