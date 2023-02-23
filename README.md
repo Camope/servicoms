@@ -16,7 +16,7 @@ Una solicitud es una entidad con las propiedades: id, fecha de solicitud, idComi
 **Cumplimiento de requisitos**
 1. **Herencia**: En Comisión de Servicio y sus subtipos.
 2. **Relación One-To-Many**: Entidades Comisión de Servicio y Solicitud
-3. **Método personalizado**: Eventos con resultado de empate entre dos fechas.
+3. **Método personalizado**: Calcular la duración media de las Comisiones de Servicio de Viogogen.
 4. **Listado**: Se mostrarán las Comisiones de Servicio y sus Solicitudes
 5. **CRUD**: De las Comisiones de Servicio publicadas.
 6. **URLs** del proyecto:
@@ -25,10 +25,4 @@ Una solicitud es una entidad con las propiedades: id, fecha de solicitud, idComi
    1. API: 
    1. Web:  
 
-## Interfaz de usuario
 
-Figura 1:  
-![Figura 1]
-
-Figura 2:  
-![Figura 2]
