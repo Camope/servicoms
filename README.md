@@ -1,12 +1,11 @@
 # Comisiones de Servicio
 ## Descripción
-La gestión del anuncio y solicitud de Comisiones de Servicio en la Guardia Civil actulamente se gestiona vía correo electrónico.
-La aplicación Comisiones de Servicios permitirá que una  Unidad superior oferte Comisiones de Servicio (CS) y reciba las solicitudes de interesados para poder gestionarlas. Los usuarios podrán acceder para consultar y solicitar las CS.
+Actualmente en la Guardia Civil el anuncio y la solicitud de Comisiones de Servicio se gestiona en la mayoría de los casos vía correo electrónico.
+La aplicación Comisiones de Servicios permitirá que una  Unidad superior oferte Comisiones de Servicio y reciba las solicitudes de interesados para poder gestionarlas. Los usuarios podrán acceder para consultar y solicitar las Comisiones.
 Funcionalidad:
-Personal con perfil de administrador sería la persona que en la aplicación da de alta y publica las CS y podrá consultar las solicitudes de las CS publicadas para gestionar la adjudicación.
-Personal con perfil usuario podrá consultar las Comisiones de Servicio  ofertadas y con un formulario estándar podría solicitar la de interés (una o muchas).
+Un usuario admin podrá dar de alta y publicar las CS y podrá consultar las solicitudes de las CS publicadas para gestionar la adjudicación.
+Un usuario user podrá consultar las Comisiones de Servicio ofertadas y con un formulario estándar podría solicitar la de interés (una o muchas).
 Las CS  podrán tener ninguna, una o muchas solicitudes.
-Una solicitud es una entidad con las propiedades: id, fecha de solicitud, idComisión e idUsuario.
 
 ## Diagrama de clases de diseño
 
@@ -16,7 +15,7 @@ Una solicitud es una entidad con las propiedades: id, fecha de solicitud, idComi
 **Cumplimiento de requisitos**
 1. **Herencia**: En Comisión de Servicio y sus subtipos.
 2. **Relación One-To-Many**: Entidades Comisión de Servicio y Solicitud
-3. **Método personalizado**: Calcular la duración media de las Comisiones de Servicio de Viogogen.
+3. **Método personalizado**: Calcular la duración media de las Comisiones de Servicio de Viogen.
 4. **Listado**: Se mostrarán las Comisiones de Servicio y sus Solicitudes
 5. **CRUD**: De las Comisiones de Servicio publicadas.
 6. **URLs** del proyecto:
