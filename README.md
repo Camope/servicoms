@@ -1,11 +1,17 @@
 # Comisiones de Servicio
 ## Descripción
-Actualmente en la Guardia Civil el anuncio y la solicitud de Comisiones de Servicio se gestiona en la mayoría de los casos vía correo electrónico.
-La aplicación Comisiones de Servicios permitirá que una  Unidad superior oferte Comisiones de Servicio y reciba las solicitudes de interesados para poder gestionarlas. Los usuarios podrán acceder para consultar y solicitar las Comisiones.
-Funcionalidad:
-Un usuario admin podrá dar de alta y publicar las CS y podrá consultar las solicitudes de las CS publicadas para gestionar la adjudicación.
-Un usuario user podrá consultar las Comisiones de Servicio ofertadas y con un formulario estándar podría solicitar la de interés (una o muchas).
-Las CS  podrán tener ninguna, una o muchas solicitudes.
+Actualmente en la Guardia Civil el anuncio y la solicitud de Comisiones de Servicio se gestiona en la mayoría de los casos vía correo electrónico.  
+
+La aplicación Comisiones de Servicios permitirá que una  Unidad superior oferte Comisiones de Servicio y reciba las solicitudes de interesados para poder gestionarlas. Los usuarios podrán acceder para consultar y solicitar las Comisiones.  
+
+Funcionalidad:  
+
+Un usuario admin podrá dar de alta y publicar las CS y podrá consultar las solicitudes de las CS publicadas para gestionar la adjudicación.  
+
+Un usuario user podrá consultar las Comisiones de Servicio ofertadas y con un formulario estándar podría solicitar la de interés (una o muchas).  
+
+Las CS  podrán tener ninguna, una o muchas solicitudes.  
+
 
 ## Diagrama de clases de diseño
 
