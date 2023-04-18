@@ -1,8 +1,8 @@
-# Comisiones de Servicio
+# Aplicación ServiComs
 ## Descripción
 Actualmente en la Guardia Civil el anuncio y la solicitud de Comisiones de Servicio se gestiona en la mayoría de los casos vía correo electrónico.  
 
-La aplicación Comisiones de Servicios permitirá que una  Unidad superior oferte Comisiones de Servicio y reciba las solicitudes de interesados para poder gestionarlas. Los usuarios podrán acceder para consultar y solicitar las Comisiones.  
+La aplicación ServiComs permitirá que una  Unidad superior oferte Comisiones de Servicio y reciba las solicitudes de interesados para poder gestionarlas. Los usuarios podrán acceder para consultar y solicitar las Comisiones.  
 
 Funcionalidad:  
 
