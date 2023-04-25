@@ -26,7 +26,7 @@ export default {
         <h2>Lista de comisiones:</h2>
 
         <div v-if="listaComisiones" v-for="comision in listaComisiones" class="container text-start">
-            <span>{{ comision }}</span>
+            <span>{{ comision.puesto }}</span>
             <hr>
         </div>
 

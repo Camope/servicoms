@@ -1,14 +1,15 @@
 import { defineStore } from 'pinia'
-//import participantesJSON from '@/assets/participantes.json'
+import comisionesJSON from '@/assets/datosComisiones.json'
 //import { getParticipantes } from './api-service'
 
 
 
 export const useComisionesStore = defineStore('comisiones', {
   state: () => ({
-    listaComisiones: ['comision1', 'comision2']
+    listaComisiones: comisionesJSON
   }),
   getters: {
+
   },
   actions: {
     getComisiones() {
