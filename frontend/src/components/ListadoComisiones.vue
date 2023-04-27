@@ -1,6 +1,6 @@
 <script>
 import { FilterMatchMode } from 'primevue/api';
-import { ProductService } from '@/service/ProductService';
+// import { ProductService } from '@/service/ProductService';
 import { mapActions, mapState } from 'pinia'
 import { useComisionesStore } from '@/stores/comisiones'
 

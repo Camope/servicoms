@@ -24,5 +24,6 @@ dist-ssr
 *.sw?
 package-lock.json
 
-# text files
-service
+# test files
+ListadoComisiones_copy.vue
+ProductService_copy.js
