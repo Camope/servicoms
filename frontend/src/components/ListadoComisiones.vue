@@ -9,17 +9,8 @@ export default {
     return {
       products: null,
       productDialog: false,
-      deleteProductDialog: false,
-      deleteProductsDialog: false,
-      product: {},
-      selectedProducts: null,
       filters: {},
       submitted: false,
-      statuses: [
-        { label: 'INSTOCK', value: 'instock' },
-        { label: 'LOWSTOCK', value: 'lowstock' },
-        { label: 'OUTOFSTOCK', value: 'outofstock' }
-      ],
       listaComisiones: []
     }
   },
@@ -64,7 +55,7 @@ export default {
 <template>
   <div>
     <div class="card">
-      <DataTable ref="dt" :value="listaComisiones" v-model:selection="selectedProducts" dataKey="id" :paginator="true" :rows="10"
+      <DataTable ref="dt" :value="listaComisiones" dataKey="id" :paginator="true" :rows="10"
         :filters="filters" :row-hover="true" @row-click="rowClick"
         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
         :rowsPerPageOptions="[5, 10, 25]" currentPageReportTemplate="Mostrando de {first} a {last} de {totalRecords} comisiones">
