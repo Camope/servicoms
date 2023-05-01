@@ -7,6 +7,7 @@ import App from '@/App.vue'
 import About from '@/components/About.vue'
 import NotFound from '@/components/NotFound.vue'
 import ListadoComisiones from '@/components/ListadoComisiones.vue'
+import DetalleComision from '@/components/DetalleComision.vue'
 
 
 import PrimeVue from 'primevue/config'
@@ -22,6 +23,8 @@ import InputNumber from 'primevue/inputnumber'
 import Dialog from 'primevue/dialog'
 import Calendar from 'primevue/calendar'
 import InputSwitch from 'primevue/inputswitch'
+import Panel from 'primevue/panel'
+import Divider from 'primevue/divider'
 
 // Import our custom CSS
 import '@/scss/styles.scss'
@@ -45,6 +48,7 @@ const routes = [
     { path: '/', name: 'home', component: About },
     { path: '/about', name: 'about', component: About },
     { path: '/comisiones', name: 'comisiones', component: ListadoComisiones },
+    { path: '/comision/:comisionId', name: 'comision', component: DetalleComision, props: true },
     { path: '/:pathMatch(.*)*', name: 'notFound', component: NotFound },
 ]
 
@@ -77,5 +81,7 @@ app.component('InputNumber', InputNumber)
 app.component('Dialog', Dialog)
 app.component('Calendar', Calendar)
 app.component('InputSwitch', InputSwitch)
+app.component('Panel', Panel)
+app.component('Divider', Divider)
 
 app.mount('#app')

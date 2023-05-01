@@ -145,6 +145,7 @@ export default {
     ...mapActions(useComisionesStore, ['getComisiones']),
     rowClick(event) {
       console.log(event.data.id)
+      // this.$router.push({ path: "prueba" });
     },
     cambioViogen(event) {
       this.comision.extranjero = false
@@ -178,11 +179,11 @@ export default {
           </div>
         </template>
 
-        <Column field="empleo" header="Empleo" sortable style="min-width:10rem; max-width: 10rem;"></Column>
-        <Column field="puesto" header="Vacante" sortable style="min-width:10rem; max-width: 10rem;"></Column>
-        <Column field="especialidad" header="Especialidad" sortable style="width:10rem"></Column>
-        <Column field="localidad" header="Localidad" sortable style="width:10rem"></Column>
-        <Column field="estado" header="Estado" sortable style="min-width:12rem">
+        <Column field="empleo" header="Empleo" sortable style="min-width:10rem"></Column>
+        <Column field="puesto" header="Vacante" sortable style="min-width:10rem"></Column>
+        <Column field="especialidad" header="Especialidad" sortable style="min-width:10rem"></Column>
+        <Column field="localidad" header="Localidad" sortable style="min-width:10rem"></Column>
+        <Column field="estado" header="Estado" sortable style="min-width:10rem; display: flex; justify-content: center;">
           <template #body="slotProps">
             <Tag :value="getStatusLabel(slotProps.data.estado).value"
               :severity="getStatusLabel(slotProps.data.estado).severity" />
@@ -200,10 +201,10 @@ export default {
         <small class="p-error" v-if="enviar && !comision.vacante">Introduzca nombre de la vacante</small>
       </div>
 
-      <!-- <div class="field">
+      <div class="field">
         <label for="description">Descripción</label>
-        <Textarea id="description" v-model="product.description" required="false" rows="3" cols="20" />
-      </div> -->
+        <Textarea id="description" v-model="comision.description" required="false" rows="3" cols="20" />
+      </div>
 
       <div class="field">
         <label for="name">Localidad</label>
@@ -270,4 +271,5 @@ export default {
       </template>
     </Dialog>
 
-  </div></template>
+  </div>
+</template>
