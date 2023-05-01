@@ -1,10 +1,11 @@
 <script>
 import { mapActions, mapState } from 'pinia'
 import { useComisionesStore } from '@/stores/comisiones'
+import FormularioComision from './FormularioComision.vue'
 
 export default {
   props: ['comisionId'],
-  components: {},
+  components: { FormularioComision },
   emits: [],
   data() {
     return {
@@ -13,6 +14,7 @@ export default {
       confirmacionAnulacion: false,
       anulacion: false,
       confirmacionSolicitud: false,
+      mostrarFormulario: false
     }
   },
   created() {
@@ -28,6 +30,18 @@ export default {
     fecha() {
       let options = { year: 'numeric', month: 'long', day: 'numeric' };
       return this.comision.fechaLimite.toLocaleDateString('es-ES', options);
+    },
+    esAdmin() {
+      return true
+    },
+    esSolicitante() {
+      return true
+    },
+    esPublicador() {
+      return true
+    },
+    mensajeEstado() {
+      return (!this.esAdmin && this.esSolicitante) ? "(Estado: solicitada)" : ""
     }
   },
   methods: {
@@ -41,11 +55,21 @@ export default {
     },
     anular() {
       this.anulacion = true
-      setTimeout(() => {this.confirmacionAnulacion = false}, 2000)
+      setTimeout(() => { this.confirmacionAnulacion = false }, 2000)
     },
     solicitar() {
       this.confirmacionSolicitud = true
-      setTimeout(() => {this.confirmacionSolicitud = false}, 2000)
+      setTimeout(() => { this.confirmacionSolicitud = false }, 2000)
+    },
+    editar() {
+      this.mostrarFormulario = true
+    },
+    cerrarFormulario() {
+      this.mostrarFormulario = false
+    },
+    guardar(data) {
+      this.comision = data
+      this.cerrarFormulario()
     }
   }
 }
@@ -57,7 +81,7 @@ export default {
     <Panel header="Datos de la comisión">
 
       <div class="field col-12 encabezado">
-        {{ comision.puesto }} {{ estadoSolicitud ? "(Estado: solicitada)" : "" }}
+        {{ comision.puesto }} {{ mensajeEstado }}
       </div>
 
       <Divider />
@@ -74,18 +98,22 @@ export default {
 
       <div class="flex justify-content-around">
         <Button label="Volver" icon="pi pi-arrow-left" severity="secondary" text @click="volver" />
-        <Button v-if="!estadoSolicitud" label="Solicitar" icon="pi pi-check" severity="success" text @click="solicitar" />
-        <Button v-if="estadoSolicitud" label="Anular" icon="pi pi-times" severity="danger" text @click="confirmaAnular" />
+        <Button v-if="!esAdmin && !esSolicitante" label="Solicitar" icon="pi pi-check" severity="success" text
+          @click="solicitar" />
+        <Button v-if="esAdmin && esPublicador" label="Editar" icon="pi pi-pencil" severity="success" text
+          @click="editar" />
+        <Button v-if="(esAdmin && esPublicador) || (!esAdmin && esSolicitante)" label="Anular" icon="pi pi-times"
+          severity="danger" text @click="confirmaAnular" />
       </div>
     </Panel>
 
     <Dialog v-model:visible="confirmacionAnulacion" :style="{ width: '450px' }" header="Confirmación" :modal="true">
       <div v-if="!anulacion" class="confirmation-content">
         <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
-        <span>¿Seguro que quiere anular la solicitud?</span>
+        <span>¿Seguro que quiere anular la {{ esAdmin ? "comisión" : "solicitud" }}?</span>
       </div>
       <div v-if="anulacion" class="confirmation-content">
-        <span style="color: red;">¡Su solicitud ha sido anulada!</span>
+        <span style="color: red;">¡{{ esAdmin ? "La comisión" : "Su solicitud" }} ha sido anulada!</span>
       </div>
       <template v-if="!anulacion" #footer>
         <Button label="No" icon="pi pi-times" text @click="confirmacionAnulacion = false" />
@@ -98,6 +126,10 @@ export default {
         <span style="color: red;">¡Su solicitud ha sido realizada!</span>
       </div>
     </Dialog>
+
+    <FormularioComision v-bind:mostrar="mostrarFormulario" v-bind:comision="comision"
+      @cancelar-formulario="cerrarFormulario" @guardarCambios="guardar" />
+
   </div>
 </template>
 

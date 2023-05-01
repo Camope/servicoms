@@ -1,6 +1,6 @@
 <script>
 import { FilterMatchMode } from 'primevue/api';
-//import { ProductService } from '@/service/ProductService';
+import { ConstantesComision } from '@/js/ConstantesComision';
 import { mapActions, mapState } from 'pinia'
 import { useComisionesStore } from '@/stores/comisiones'
 
@@ -11,6 +11,7 @@ export default {
       filters: {},
       enviar: false,
       listaComisiones: [],
+      // products: {},
       comision: {
         // vacante: null,
         // localidad: null,
@@ -23,37 +24,37 @@ export default {
         // extranjero: false,
         // perfil: null
       },
-      empleos: [
-        'Guardia',
-        'Cabo/Cabo 1º',
-        'Cabo Mayor',
-        'Sargento/Sto. 1º',
-        'Brigada',
-        'Subteniente',
-        'Suboficial Mayor',
-        'Teniente',
-        'Capitán',
-        'Comandante',
-        'Teniente Coronel',
-        'Coronel',
-        'General'
-      ],
-      especialidades: [
-        'Seguridad Ciudadana',
-        'SEPRONA',
-        'Tráfico',
-        'UEI',
-        'Policía Judicial',
-        'TEDAX NRBQ',
-        'Control de Armas',
-        'Servicio Aéreo',
-        'Marítimo',
-        'Montaña',
-        'Fiscal',
-        'ARS',
-        'Cinológico',
-        'Otras'
-      ],
+      // empleos: [
+        // 'Guardia',
+        // 'Cabo/Cabo 1º',
+        // 'Cabo Mayor',
+        // 'Sargento/Sto. 1º',
+        // 'Brigada',
+        // 'Subteniente',
+        // 'Suboficial Mayor',
+        // 'Teniente',
+        // 'Capitán',
+        // 'Comandante',
+        // 'Teniente Coronel',
+        // 'Coronel',
+        // 'General'
+      // ],
+      // especialidades: [
+      //   'Seguridad Ciudadana',
+      //   'SEPRONA',
+      //   'Tráfico',
+      //   'UEI',
+      //   'Policía Judicial',
+      //   'TEDAX NRBQ',
+      //   'Control de Armas',
+      //   'Servicio Aéreo',
+      //   'Marítimo',
+      //   'Montaña',
+      //   'Fiscal',
+      //   'ARS',
+      //   'Cinológico',
+      //   'Otras'
+      // ],
       duracionMaxima: 12,
       riesgos: [
         'Bajo',
@@ -91,12 +92,19 @@ export default {
   },
   mounted() {
     //ProductService.getProducts().then((data) => (this.products = data))
+    // this.products = ProductService.getProductsData()
     this.listaComisiones = this.getComisiones()
     this.listaComisiones.forEach(element => element.estado = element.id % 3)
   },
   computed: {
     hoy() {
       return new Date()
+    },
+    empleos() {
+      return ConstantesComision.getEmpleos()
+    },
+    especialidades() {
+      return ConstantesComision.getEspecialidades()
     }
   },
   methods: {
