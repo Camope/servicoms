@@ -2,14 +2,16 @@
 import { mapActions, mapState } from 'pinia'
 import { useComisionesStore } from '@/stores/comisiones'
 import FormularioComision from './FormularioComision.vue'
+import ListadoSolicitantes from './ListadoSolicitantes.vue'
 
 export default {
   props: ['comisionId'],
-  components: { FormularioComision },
+  components: { FormularioComision, ListadoSolicitantes },
   emits: [],
   data() {
     return {
       comision: null,
+      comisionTemp: null,
       estadoSolicitud: null,
       confirmacionAnulacion: false,
       anulacion: false,
@@ -22,14 +24,11 @@ export default {
   mounted() {
     this.comision = this.getComisiones().find(c => c.id == this.comisionId)
     this.estadoSolicitud = true
-    this.comision.fechaLimite = new Date()
-    console.log(this.comision)
-    console.log(this.comisionId)
   },
   computed: {
     fecha() {
       let options = { year: 'numeric', month: 'long', day: 'numeric' };
-      return this.comision.fechaLimite.toLocaleDateString('es-ES', options);
+      return (new Date(Number(this.comision.fechaLimite))).toLocaleDateString('es-ES', options);
     },
     esAdmin() {
       return true
@@ -42,10 +41,19 @@ export default {
     },
     mensajeEstado() {
       return (!this.esAdmin && this.esSolicitante) ? "(Estado: solicitada)" : ""
+    },
+    tipoComision() {
+      let tipo
+      
+      if( this.comision.riesgo ) tipo = `Viogen (riesgo: ${this.comision.riesgo})`
+      else if ( this.comision.perfil ) tipo = `Extranjero (perfil: ${this.comision.riesgo})`
+      else tipo = 'Normal'
+      
+      return tipo
     }
   },
   methods: {
-    ...mapActions(useComisionesStore, ['getComisiones']),
+    ...mapActions(useComisionesStore, ['getComisiones', 'setComision']),
     volver() {
       this.$router.go(-1)
     },
@@ -62,13 +70,16 @@ export default {
       setTimeout(() => { this.confirmacionSolicitud = false }, 2000)
     },
     editar() {
+      this.comisionTemp = { ...this.comision }
       this.mostrarFormulario = true
     },
     cerrarFormulario() {
       this.mostrarFormulario = false
     },
     guardar(data) {
-      this.comision = data
+      data.id = this.comision.id
+      this.setComision(data)
+      this.comision = data //{ ...data }
       this.cerrarFormulario()
     }
   }
@@ -93,6 +104,7 @@ export default {
         <li><span class="negrita">Duración:</span> {{ comision.duracion }} {{ comision.duracion > 1 ? "meses" : "mes" }}
         </li>
         <li><span class="negrita">Fecha límite solicitud:</span> {{ fecha }}</li>
+        <li><span class="negrita">Tipo:</span> {{ tipoComision }}</li>
         <li><span class="negrita">Descripción:</span> {{ comision.descripcion ? comision.descripcion : "" }}</li>
       </ul>
 
@@ -106,6 +118,8 @@ export default {
           severity="danger" text @click="confirmaAnular" />
       </div>
     </Panel>
+
+    <ListadoSolicitantes :comision-id="comision.id + ''"/>
 
     <Dialog v-model:visible="confirmacionAnulacion" :style="{ width: '450px' }" header="Confirmación" :modal="true">
       <div v-if="!anulacion" class="confirmation-content">
@@ -127,8 +141,8 @@ export default {
       </div>
     </Dialog>
 
-    <FormularioComision v-bind:mostrar="mostrarFormulario" v-bind:comision="comision"
-      @cancelar-formulario="cerrarFormulario" @guardarCambios="guardar" />
+    <FormularioComision :mostrar="mostrarFormulario" :comision="comisionTemp" @cancelar-formulario="cerrarFormulario"
+      @guardarCambios="guardar" />
 
   </div>
 </template>

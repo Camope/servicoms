@@ -1,0 +1,92 @@
+[
+    {
+        "id": "1",
+        "nombre": "Antonio",
+        "apellidos": "Perez Vazquez",
+        "tip": "E12384J",
+        "empleo": "Guardia",
+        "email": "aperva@guardiacvil.es",
+        "comision_id": "1"
+    },
+    {
+        "id": "2",
+        "nombre": "Alejandro",
+        "apellidos": "Rodriguez Marin",
+        "tip": "T45323R",
+        "empleo": "Cabo",
+        "email": "aroma@guardiacvil.es",
+        "comision_id": "1"
+    },
+    {
+        "id": "3",
+        "nombre": "Manuel",
+        "apellidos": "Cano Revuelta",
+        "tip": "S23556W",
+        "empleo": "Teniente",
+        "email": "macano@guardiacvil.es",
+        "comision_id": "1"
+    },
+    {
+        "id": "1",
+        "nombre": "Antonio",
+        "apellidos": "Perez Vazquez",
+        "tip": "E12384J",
+        "empleo": "Guardia",
+        "email": "aperva@guardiacvil.es",
+        "comision_id": "2"
+    },
+    {
+        "id": "2",
+        "nombre": "Alejandro",
+        "apellidos": "Rodriguez Marin",
+        "tip": "T45323R",
+        "empleo": "Cabo",
+        "email": "aroma@guardiacvil.es",
+        "comision_id": "3"
+    },
+    {
+        "id": "3",
+        "nombre": "Manuel",
+        "apellidos": "Cano Revuelta",
+        "tip": "S23556W",
+        "empleo": "Teniente",
+        "email": "macano@guardiacvil.es",
+        "comision_id": "4"
+    },
+    {
+        "id": "1",
+        "nombre": "Antonio",
+        "apellidos": "Perez Vazquez",
+        "tip": "E12384J",
+        "empleo": "Guardia",
+        "email": "aperva@guardiacvil.es",
+        "comision_id": "4"
+    },
+    {
+        "id": "2",
+        "nombre": "Alejandro",
+        "apellidos": "Rodriguez Marin",
+        "tip": "T45323R",
+        "empleo": "Cabo",
+        "email": "aroma@guardiacvil.es",
+        "comision_id": "5"
+    },
+    {
+        "id": "3",
+        "nombre": "Manuel",
+        "apellidos": "Cano Revuelta",
+        "tip": "S23556W",
+        "empleo": "Teniente",
+        "email": "macano@guardiacvil.es",
+        "comision_id": "6"
+    },
+    {
+        "id": "1",
+        "nombre": "Antonio",
+        "apellidos": "Perez Vazquez",
+        "tip": "E12384J",
+        "empleo": "Guardia",
+        "email": "aperva@guardiacvil.es",
+        "comision_id": "5"
+    }
+]

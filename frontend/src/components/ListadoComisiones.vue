@@ -105,7 +105,7 @@ export default {
     },
     especialidades() {
       return ConstantesComision.getEspecialidades()
-    }
+    },
   },
   methods: {
     nuevaComision() {
@@ -150,7 +150,7 @@ export default {
           return null;
       }
     },
-    ...mapActions(useComisionesStore, ['getComisiones']),
+    ...mapActions(useComisionesStore, ['getComisiones', 'initLista']),
     rowClick(event) {
       console.log(event.data.id)
       // this.$router.push({ path: "prueba" });
