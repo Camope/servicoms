@@ -5,8 +5,8 @@ import { useSolicitantesStore } from '@/stores/solicitantes'
 export default {
   props: {
     comisionId: {
-      type: String,
-      default: ""
+      type: Number,
+      default: null
     },
   },
   components: {},
@@ -23,6 +23,7 @@ export default {
   },
   mounted() {
     this.solicitantes = this.getSolicitantesPorComision(this.comisionId)
+    console.log("id: " + this.comisionId)
     this.solicitantes.forEach(s => { s.nombreCompleto = s.nombre + " " + s.apellidos })
     // console.log("comisionId: " + this.comisionId)
     // console.log(this.solicitantes)
@@ -37,7 +38,7 @@ export default {
   },
   methods: {
     ...mapActions(useSolicitantesStore, ['getSolicitantesPorComision']),
-    exportar(){
+    exportar() {
       this.$refs.dt.exportCSV();
     }
   }
@@ -47,13 +48,12 @@ export default {
 <template>
   <div v-if="!haySolicitantes" class="card encabezado">¡No hay solicitantes para esta comisión!</div>
   <div v-if="haySolicitantes" class="card">
-    <DataTable :value="solicitantes"  ref="dt" scrollable scrollHeight="400px" tableStyle="min-width: 50rem">
+    <DataTable :value="solicitantes" ref="dt" scrollable scrollHeight="400px" tableStyle="min-width: 50rem">
       <template #header>
         <div class="flex justify-content-center">
           Solicitantes
         </div>
       </template>
-      <!-- <Column field="tip" header="TIP"></Column> -->
       <Column field="tip" header="TIP" style=""></Column>
       <Column field="nombreCompleto" header="Nombre" style=""></Column>
       <Column field="empleo" header="Empleo" style=""></Column>
@@ -75,5 +75,4 @@ export default {
   margin: 0;
   padding: 1rem;
 }
-
 </style>

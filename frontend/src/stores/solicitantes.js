@@ -24,9 +24,9 @@ export const useSolicitantesStore = defineStore('solicitantes', {
       if (!this.listaSolicitantes) {
         this.initLista()
       }
-      console.log(this.listaSolicitantes)
-      console.log(this.listaSolicitantes[0].comision_id)
-      return this.listaSolicitantes.filter(s => s.comision_id == comisionId)
+      return (this.listaSolicitantes.filter(s => {
+        return s.comisiones.findIndex(id => id == comisionId) >= 0
+      }))
     },
     addSolicitante(solicitante, comisionId) {
 

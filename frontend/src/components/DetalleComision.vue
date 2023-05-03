@@ -119,7 +119,7 @@ export default {
       </div>
     </Panel>
 
-    <ListadoSolicitantes :comision-id="comision.id + ''"/>
+    <ListadoSolicitantes :comision-id="comision.id"/>
 
     <Dialog v-model:visible="confirmacionAnulacion" :style="{ width: '450px' }" header="Confirmación" :modal="true">
       <div v-if="!anulacion" class="confirmation-content">
