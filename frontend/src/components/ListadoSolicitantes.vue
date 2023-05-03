@@ -13,7 +13,7 @@ export default {
   emits: [],
   data() {
     return {
-      solicitantes: null,
+      solicitantes: [],
     }
   },
   updated() {
@@ -23,26 +23,57 @@ export default {
   },
   mounted() {
     this.solicitantes = this.getSolicitantesPorComision(this.comisionId)
+    this.solicitantes.forEach(s => { s.nombreCompleto = s.nombre + " " + s.apellidos })
     // console.log("comisionId: " + this.comisionId)
     // console.log(this.solicitantes)
   },
   computed: {
-  
+    haySolicitantes() {
+      return this.solicitantes.length > 0
+    },
+    titulo() {
+      return this.haySolicitantes ? "Solicitantes" : "No hay solicitantes"
+    }
   },
   methods: {
     ...mapActions(useSolicitantesStore, ['getSolicitantesPorComision']),
+    exportar(){
+      this.$refs.dt.exportCSV();
+    }
   }
 }
 </script>
 
 <template>
-    <div class="card">
-        <DataTable :value="solicitantes" scrollable scrollHeight="400px" tableStyle="min-width: 50rem">
-            <!-- <Column field="tip" header="TIP"></Column> -->
-            <Column field="tip" header="TIP"></Column>
-            <Column field="nombre" header="Nombre"></Column>
-            <Column field="empleo" header="Empleo"></Column>
-            <Column field="email" header="e-mail"></Column>
-        </DataTable>
-    </div>
+  <div v-if="!haySolicitantes" class="card encabezado">¡No hay solicitantes para esta comisión!</div>
+  <div v-if="haySolicitantes" class="card">
+    <DataTable :value="solicitantes"  ref="dt" scrollable scrollHeight="400px" tableStyle="min-width: 50rem">
+      <template #header>
+        <div class="flex justify-content-center">
+          Solicitantes
+        </div>
+      </template>
+      <!-- <Column field="tip" header="TIP"></Column> -->
+      <Column field="tip" header="TIP" style=""></Column>
+      <Column field="nombreCompleto" header="Nombre" style=""></Column>
+      <Column field="empleo" header="Empleo" style=""></Column>
+      <Column field="email" header="e-mail" style=""></Column>
+      <template #footer>
+        <div class="flex justify-content-center">
+          <Button label="Exportar" icon="pi pi-external-link" severity="secondary" @click="exportar($event)" />
+        </div>
+      </template>
+    </DataTable>
+  </div>
 </template>
+
+<style scoped>
+.encabezado {
+  color: #495057;
+  font-weight: 600;
+  text-align: center;
+  margin: 0;
+  padding: 1rem;
+}
+
+</style>
