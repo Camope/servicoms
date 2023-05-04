@@ -191,7 +191,7 @@ export default {
         <Column field="puesto" header="Vacante" sortable style="min-width:10rem"></Column>
         <Column field="especialidad" header="Especialidad" sortable style="min-width:10rem"></Column>
         <Column field="localidad" header="Localidad" sortable style="min-width:10rem"></Column>
-        <Column field="estado" header="Estado" sortable style="min-width:10rem; display: flex; justify-content: center;">
+        <Column field="estado" header="Estado" sortable style="min-width:10rem; text-align: center;">
           <template #body="slotProps">
             <Tag :value="getStatusLabel(slotProps.data.estado).value"
               :severity="getStatusLabel(slotProps.data.estado).severity" />
@@ -281,3 +281,9 @@ export default {
 
   </div>
 </template>
+
+<style>
+.p-datatable div .p-column-header-content {
+  display: inline-flex;
+}
+</style>

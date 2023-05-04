@@ -25,12 +25,14 @@ import Calendar from 'primevue/calendar'
 import InputSwitch from 'primevue/inputswitch'
 import Panel from 'primevue/panel'
 import Divider from 'primevue/divider'
+import Menubar from 'primevue/menubar'
+import Menu from 'primevue/menu'
 
 // Import our custom CSS
 import '@/scss/styles.scss'
 
 // Import all of Bootstrap's JS
-import * as bootstrap from 'bootstrap'
+import * as bootstrap from '~bootstrap'
 
 import 'bootstrap-icons/font/bootstrap-icons.css'
 
@@ -83,5 +85,7 @@ app.component('Calendar', Calendar)
 app.component('InputSwitch', InputSwitch)
 app.component('Panel', Panel)
 app.component('Divider', Divider)
+app.component('Menubar', Menubar)
+app.component('Menu', Menu)
 
 app.mount('#app')

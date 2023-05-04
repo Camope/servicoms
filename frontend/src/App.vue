@@ -1,5 +1,7 @@
 <script setup>
 
+import BarraNavegacion from '@/components/BarraNavegacion.vue'
+
 // import { storeToRefs } from 'pinia'
 // import { watch } from 'vue'
 // import { useComisionesStore } from '@/stores/comisiones'
@@ -29,9 +31,10 @@
 </script>
 
 <template>
-  <div class="">
+  <div class="fondo">
     <div>
       <div>
+        <BarraNavegacion />
         <h1>Menú</h1>
         <router-link :to="{ name: 'home' }" :class="$route.name == 'home' ? 'badge bg-success' : ''" class="me-2">Go to
           Home</router-link>
@@ -48,4 +51,8 @@
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+  .fondo {
+    background-color: grey;
+  }
+</style>
