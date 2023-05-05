@@ -8,12 +8,7 @@ export default {
   emits: [],
   data() {
     return {
-      items: [
-        { separator: true },
-        { label: 'Profile', icon: 'pi pi-fw pi-user' },
-        { label: 'Settings', icon: 'pi pi-fw pi-cog' },
-        { separator: true }
-      ]
+     
     }
   },
   created() {
@@ -28,6 +23,9 @@ export default {
     //    ...mapActions(useComisionesStore, ['getComisiones', 'setComision']),
     muestraMenuLogout(event) {
       this.$refs.menu.toggle(event);
+    },
+    linkAdmin() {
+      console.log("click en admin")
     }
   }
 }
@@ -35,28 +33,43 @@ export default {
 
 <template>
   <div class="card relative z-2">
-    <div></div>
     <div class="p-menubar p-component">
       <div class="p-menubar-start logo">
         <img alt="logo" src="/src/assets/sc.png" class="mr-2" height="40">
         <span class="texto-logo">ServiComs</span>
       </div>
+
       <div class="p-menubar-end">
         <!-- <span>Carlos Moreno</span> -->
-        <Button icon="pi pi-user" severity="info" rounded outlined @click="muestraMenuLogout" />
-        <!-- <Menu ref="menu" :model="items" :popup="true" /> -->
+        <!-- <Button icon="pi pi-user" severity="info" rounded outlined @click="muestraMenuLogout" />
+        <Menu ref="menu" :model="items" :popup="true" /> -->
         <!-- <div class="dropdown"> -->
-          <a class="btn btn-secondary dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-            Dropdown link
-          </a>
+        <a class="" href="#" role="button" data-bs-toggle="dropdown">
+          <Button icon="pi pi-user" severity="info" rounded outlined />
+        </a>
 
-          <ul class="dropdown-menu" >
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-          </ul>
-        </div>
-      <!-- </div> -->
+        <ul class="dropdown-menu dropdown-menu-end p-menu-overlay p-menu p-component">
+          <li class="p-submenu-header" role="none">Login</li>
+          <li><hr class="dropdown-divider"></li>
+          <li class="p-menuitem" @click="linkAdmin">
+            <div class="p-menuitem-content">
+              <a class="p-menuitem-link" tabindex="-1">
+                <span class="p-menuitem-icon pi pi-fw pi-user"></span>
+                <span class="p-menuitem-text">Admin</span>
+              </a>
+            </div>
+          </li>
+          <li class="p-menuitem">
+            <div class="p-menuitem-content">
+              <a class="p-menuitem-link" tabindex="-1">
+                <span class="p-menuitem-icon pi pi-fw pi-users"></span>
+                <span class="p-menuitem-text">User</span>
+              </a>
+            </div>
+          </li>
+
+        </ul>
+      </div>
     </div>
   </div>
 </template>
