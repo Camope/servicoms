@@ -21,6 +21,9 @@ export const useComisionesStore = defineStore('comisiones', {
       }
       return this.listaComisiones
     },
+    getComisionPorId(comisionId) {
+      return this.getComisiones().find(comision => comision.id == comisionId)
+    },
     setComisiones(comisiones) {
       this.listaComisiones = comisiones
     },

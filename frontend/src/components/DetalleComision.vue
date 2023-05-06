@@ -12,7 +12,6 @@ export default {
     return {
       comision: null,
       comisionTemp: null,
-      estadoSolicitud: null,
       confirmacionAnulacion: false,
       anulacion: false,
       confirmacionSolicitud: false,

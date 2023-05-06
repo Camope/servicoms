@@ -1,6 +1,6 @@
 <script>
 import { mapActions, mapState } from 'pinia'
-// import { useComisionesStore } from '@/stores/comisiones'
+import { useUsuariosStore } from '@/stores/usuarios'
 
 export default {
   props: [],
@@ -8,36 +8,46 @@ export default {
   emits: [],
   data() {
     return {
-      isLoggedIn: false,
-      itemVisible: false,
-      isAdmin: false
     }
   },
   created() {
   },
   mounted() {
-
   },
   computed: {
+    ...mapState(useUsuariosStore, [ 'getUsuarioLogeado', 'isUserLoggedIn', 'isUserAdmin' ]),
+    isLoggedIn() {
+      return this.isUserLoggedIn
+    },
+    isAdmin() {
+      return this.isUserAdmin
+    },
+    nombre() {
+      return this.getUsuarioLogeado.nombre
+    }
   },
   methods: {
-    //    ...mapActions(useComisionesStore, ['getComisiones', 'setComision']),
+    ...mapActions(useUsuariosStore, ['userLogin', 'userLogout']),
     muestraMenuLogout(event) {
       this.$refs.menu.toggle(event);
     },
     login(role) {
-      console.log("click en admin")
-      this.isLoggedIn = true
-      this.isAdmin = (role == "admin")
+      if (role == "admin") {
+        this.userLogin(4) // El usuario 4 es es administrador en los datos de prueba
+      } else {
+        this.userLogin(Math.floor(Math.random() * 3) + 1) // Selecciona cualquier usuario (1-3) no admin aleatoriamente
+      }
     },
     logout() {
-      this.isLoggedIn = false
+      this.userLogout()
+      this.$router.push({ name: "comisiones" })
     },
     goHome() {
-      this.$router.push({ name: "comisiones" });
+      this.$router.push({ name: "comisiones" })
     },
     misComisiones() {
-      
+      this.$router.push({ name: "miscomisiones" })
+
     }
   }
 }
@@ -47,13 +57,16 @@ export default {
   <div class="card relative z-2">
     <div class="p-menubar p-component">
       <div class="p-menubar-start logo">
-        <img alt="logo" src="/src/assets/sc.png" class="mr-2" height="40">
+        <router-link :to="{ name: 'home' }">
+          <img alt="logo" src="/src/assets/sc.png" class="mr-2" height="40">
+        </router-link>
         <span class="texto-logo">ServiComs</span>
       </div>
 
       <div class="p-menubar-end">
         <a class="" href="#" role="button" data-bs-toggle="dropdown">
-          <Button icon="pi pi-user" severity="warning" rounded />
+          <Button v-if="!isLoggedIn" label="Inicia Sesión" severity="info" size="small" />
+          <Button v-else icon="pi pi-user" severity="warning" rounded />
         </a>
 
         <div class="dropdown-menu dropdown-menu-end p-menu-overlay p-menu p-component">
@@ -93,7 +106,7 @@ export default {
                 <i class="pi pi-user mr-3" style="font-size: 1.5rem" />
               </div>
               <div class="flex flex-column justify-content-center">
-                <span class="font-bold">Carlos Moreno</span>
+                <span class="font-bold">{{ nombre }}</span>
                 <span class="text-sm">{{ isAdmin ? "Admin" : "Usuario" }}</span>
               </div>
             </li>
@@ -135,7 +148,6 @@ export default {
 </template>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Odibee+Sans&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Michroma&display=swap');
 
 .logo {

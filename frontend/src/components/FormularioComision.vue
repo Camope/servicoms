@@ -4,8 +4,7 @@ import { ConstantesComision } from '@/js/ConstantesComision';
 export default {
   props: {
     comision: {
-      type: Object,
-      default: {}
+      type: Object
     },
     mostrar: {
       type: Boolean,
@@ -15,15 +14,14 @@ export default {
   components: {},
   emits: ['cancelarFormulario', 'guardarCambios'],
   data() {
-    console.log("data")
     return {
-      // comision: this.comision,
       enviar: false,
     }
   },
   updated() {
     console.log("Updated")
     console.log(this.comision.especialidad)
+
     this.comision.viogen = this.comision.riesgo ? true : false
     this.comision.extranjero = this.comision.perfil ? true : false
   },
@@ -91,7 +89,7 @@ export default {
 
 <template>
   <div>
-    <Dialog v-if="comision" :visible="visible" @update:visible="$emit('cancelarFormulario')" :style="{ width: '500px' }"
+    <Dialog :visible="visible" @update:visible="$emit('cancelarFormulario')" :style="{ width: '500px' }"
       :header="comision ? 'Editar Comisión' : 'Nueva Comisión'" :modal="true" class="p-fluid">
       <div class="field">
         <label for="vacante">Vacante</label>  

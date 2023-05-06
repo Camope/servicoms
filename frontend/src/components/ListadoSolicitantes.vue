@@ -1,6 +1,6 @@
 <script>
 import { mapActions, mapState } from 'pinia'
-import { useSolicitantesStore } from '@/stores/solicitantes'
+import { useUsuariosStore } from '@/stores/usuarios'
 
 export default {
   props: {
@@ -37,7 +37,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(useSolicitantesStore, ['getSolicitantesPorComision']),
+    ...mapActions(useUsuariosStore, ['getSolicitantesPorComision']),
     exportar() {
       this.$refs.dt.exportCSV();
     }

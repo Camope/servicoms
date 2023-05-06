@@ -49,6 +49,7 @@ const pinia = createPinia()
 const routes = [
     { path: '/', name: 'home', component: About },
     { path: '/about', name: 'about', component: About },
+    { path: '/miscomisiones', name: 'miscomisiones', component: ListadoComisiones, props: { filtrar: true } },
     { path: '/comisiones', name: 'comisiones', component: ListadoComisiones },
     { path: '/comision/:comisionId', name: 'comision', component: DetalleComision, props: true },
     { path: '/:pathMatch(.*)*', name: 'notFound', component: NotFound },
