@@ -57,7 +57,7 @@ export default {
   <div class="card relative z-2">
     <div class="p-menubar p-component">
       <div class="p-menubar-start logo">
-        <router-link :to="{ name: 'home' }">
+        <router-link :to="{ name: 'comisiones' }">
           <img alt="logo" src="/src/assets/sc.png" class="mr-2" height="40">
         </router-link>
         <span class="texto-logo">ServiComs</span>

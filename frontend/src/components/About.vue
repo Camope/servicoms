@@ -1,4 +1,19 @@
 <template>
-    <h1>¿Cómo funciona la aplicación?</h1>
-    <p>A través de esta aplicación podrá consultar y solicitar comisiones de servicio</p>
+  <div class="card relative">
+    <div class="flex p-component flex-column aviso-50">
+      <div class="">
+        <h1>¡¡Página en construcción!!</h1>
+      </div>
+      <div class="">
+        <h2>Disculpe las molestias</h2>
+      </div>
+    </div>
+  </div>
 </template>
+
+<style scoped>
+.aviso-50 {
+  min-height: 50vh;
+  justify-content: center;
+  text-align: center;
+}</style>
