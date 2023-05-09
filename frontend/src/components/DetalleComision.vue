@@ -1,6 +1,7 @@
 <script>
 import { mapActions, mapState } from 'pinia'
 import { useComisionesStore } from '@/stores/comisiones'
+import { useUsuariosStore } from '@/stores/usuarios';
 import FormularioComision from './FormularioComision.vue'
 import ListadoSolicitantes from './ListadoSolicitantes.vue'
 
@@ -13,7 +14,7 @@ export default {
       comision: null,
       comisionTemp: null,
       confirmacionAnulacion: false,
-      anulacion: false,
+      preguntaConfirmacion: false,
       confirmacionSolicitud: false,
       mostrarFormulario: false
     }
@@ -25,48 +26,77 @@ export default {
     this.estadoSolicitud = true
   },
   computed: {
+    ...mapState(useUsuariosStore, ['getUsuarioLogeado', 'isUserLoggedIn', 'isUserAdmin']),
     fecha() {
       let options = { year: 'numeric', month: 'long', day: 'numeric' };
       return (new Date(Number(this.comision.fechaLimite))).toLocaleDateString('es-ES', options);
     },
-    esAdmin() {
-      return true
+    esPublicador() {
+      return true // Los administradores tendrán siempre rol de publicador
     },
     esSolicitante() {
-      return true
+      return this.isUserLoggedIn && !this.isUserAdmin && this.isSolicitante(this.comisionId)
     },
-    esPublicador() {
-      return true
+    muestraSolicitar() {
+      return this.isUserLoggedIn && !this.isUserAdmin && !this.isSolicitante(this.comisionId)
+    },
+    muestraEditar() {
+      return this.isUserAdmin && this.esPublicador
+    },
+    muestraAnular() {
+      return (this.isUserAdmin && this.esPublicador) || this.esSolicitante
+    },
+    muestraListado() {
+      return this.isUserAdmin && this.esPublicador
     },
     mensajeEstado() {
-      return (!this.esAdmin && this.esSolicitante) ? "(Estado: solicitada)" : ""
+      return this.esSolicitante ? "(Estado: solicitada)" : ""
     },
     tipoComision() {
       let tipo
-      
-      if( this.comision.riesgo ) tipo = `Viogen (riesgo: ${this.comision.riesgo})`
-      else if ( this.comision.perfil ) tipo = `Extranjero (perfil: ${this.comision.riesgo})`
+
+      if (this.comision.riesgo) tipo = `Viogen (riesgo: ${this.comision.riesgo})`
+      else if (this.comision.perfil) tipo = `Extranjero (perfil: ${this.comision.riesgo})`
       else tipo = 'Normal'
-      
+
       return tipo
     }
   },
   methods: {
-    ...mapActions(useComisionesStore, ['getComisiones', 'setComision']),
+    ...mapActions(useComisionesStore, ['getComisiones', 'setComision', 'removeComision']),
+    ...mapActions(useUsuariosStore, ['isSolicitante', 'addSolicitud', 'removeSolicitud']),
     volver() {
       this.$router.go(-1)
     },
     confirmaAnular() {
-      this.anulacion = false
+      this.preguntaConfirmacion = true
       this.confirmacionAnulacion = true
     },
+    confirma() {
+      if (this.esSolicitante){
+        this.anular()
+      } else {
+        this.borrar()
+      }
+    },
     anular() {
-      this.anulacion = true
-      setTimeout(() => { this.confirmacionAnulacion = false }, 2000)
+      if (this.removeSolicitud(this.comisionId)) {
+        this.preguntaConfirmacion = false
+        setTimeout(() => { this.confirmacionAnulacion = false }, 2000)
+      }
+    },
+    borrar() {
+      if (this.removeComision(this.comisionId)) {
+        this.preguntaConfirmacion = false
+        setTimeout(() => { this.confirmacionAnulacion = false }, 2000)
+      }
+      this.volver()
     },
     solicitar() {
-      this.confirmacionSolicitud = true
-      setTimeout(() => { this.confirmacionSolicitud = false }, 2000)
+      if (this.addSolicitud(this.comisionId)) {
+        this.confirmacionSolicitud = true
+        setTimeout(() => { this.confirmacionSolicitud = false }, 2000)
+      }
     },
     editar() {
       this.comisionTemp = { ...this.comision }
@@ -109,28 +139,25 @@ export default {
 
       <div class="flex justify-content-around">
         <Button label="Volver" icon="pi pi-arrow-left" severity="secondary" text @click="volver" />
-        <Button v-if="!esAdmin && !esSolicitante" label="Solicitar" icon="pi pi-check" severity="success" text
-          @click="solicitar" />
-        <Button v-if="esAdmin && esPublicador" label="Editar" icon="pi pi-pencil" severity="success" text
-          @click="editar" />
-        <Button v-if="(esAdmin && esPublicador) || (!esAdmin && esSolicitante)" label="Anular" icon="pi pi-times"
-          severity="danger" text @click="confirmaAnular" />
+        <Button v-if="muestraSolicitar" label="Solicitar" icon="pi pi-check" severity="success" text @click="solicitar" />
+        <Button v-if="muestraEditar" label="Editar" icon="pi pi-pencil" severity="success" text @click="editar" />
+        <Button v-if="muestraAnular" label="Anular" icon="pi pi-times" severity="danger" text @click="confirmaAnular" />
       </div>
     </Panel>
 
-    <ListadoSolicitantes :comision-id="comision.id"/>
+    <ListadoSolicitantes v-if="muestraListado" :comision-id="comision.id" />
 
     <Dialog v-model:visible="confirmacionAnulacion" :style="{ width: '450px' }" header="Confirmación" :modal="true">
-      <div v-if="!anulacion" class="confirmation-content">
+      <div v-if="preguntaConfirmacion" class="confirmation-content">
         <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
-        <span>¿Seguro que quiere anular la {{ esAdmin ? "comisión" : "solicitud" }}?</span>
+        <span>¿Seguro que quiere anular la {{ isUserAdmin  ? "comisión" : "solicitud" }}?</span>
       </div>
-      <div v-if="anulacion" class="confirmation-content">
-        <span style="color: red;">¡{{ esAdmin ? "La comisión" : "Su solicitud" }} ha sido anulada!</span>
+      <div v-if="!preguntaConfirmacion" class="confirmation-content">
+        <span style="color: red;">¡{{ isUserAdmin ? "La comisión" : "Su solicitud" }} ha sido anulada!</span>
       </div>
-      <template v-if="!anulacion" #footer>
+      <template v-if="preguntaConfirmacion" #footer>
         <Button label="No" icon="pi pi-times" text @click="confirmacionAnulacion = false" />
-        <Button label="Sí" icon="pi pi-check" text @click="anular" />
+        <Button label="Sí" icon="pi pi-check" text @click="confirma" />
       </template>
     </Dialog>
 

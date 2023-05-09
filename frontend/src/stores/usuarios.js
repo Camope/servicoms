@@ -50,10 +50,26 @@ export const useUsuariosStore = defineStore('usuarios', {
     },
     addSolicitud(comisionId) {
       if (this.isUserLoggedIn) {
-        if (this.getUsuarioLogeado.solicitudes.findIndex(id => id == comisionId) >= 0) {
+        if (this.getUsuarioLogeado.solicitudes.findIndex(id => id == comisionId) < 0) {
           this.getUsuarioLogeado.solicitudes.push(comisionId)
           return true
         }
+      }
+      return false
+    },
+    removeSolicitud(comisionId) {
+      if (this.isUserLoggedIn) {
+        let index = this.getUsuarioLogeado.solicitudes.findIndex(id => id == comisionId)
+        if (index >= 0) {
+          this.getUsuarioLogeado.solicitudes.splice(index, 1)
+          return true
+        }
+      }
+      return false
+    },
+    isSolicitante(comisionId) {
+      if (this.isUserLoggedIn) {
+        return this.getUsuarioLogeado.solicitudes.findIndex(id => id == comisionId) >= 0
       }
       return false
     }

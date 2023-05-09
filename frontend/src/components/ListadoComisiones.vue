@@ -122,7 +122,7 @@ export default {
         currentPageReportTemplate="Mostrando de {first} a {last} de {totalRecords} comisiones">
         <template #header>
           <div class="flex flex-wrap gap-2 align-items-center justify-content-between">
-            <span><Button label="Nueva" icon="pi pi-plus" severity="success" class="mr-2" @click="nuevaComision" /></span>
+            <Button label="Nueva" icon="pi pi-plus" severity="success" class="mr-2" @click="nuevaComision" />
             <span>{{ filtrar ? "Mis Solicitudes" : "Comisiones Publicadas" }}</span>
             <span class="p-input-icon-left">
               <i class="pi pi-search" />

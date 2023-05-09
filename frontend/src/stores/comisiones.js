@@ -41,6 +41,16 @@ export const useComisionesStore = defineStore('comisiones', {
         this.listaComisiones.push(comision)
       }
 
+    },
+    removeComision(comisionId) {
+      let index = this.listaComisiones.findIndex(c => c.id == comisionId)
+      
+      if (index >= 0) {
+        this.listaComisiones.splice(index, 1)
+        return true
+      }
+
+      return false
     }
   },
 })
