@@ -31,10 +31,10 @@ export default {
     this.initFilters();
   },
   mounted() {
-//    console.log("lista montada")
+    //    console.log("lista montada")
     if (!this.filtrar || !this.isUserLoggedIn) {
-//      console.log(this.isUserLoggedIn)
-//      console.log(this.filtrar)
+      //      console.log(this.isUserLoggedIn)
+      //      console.log(this.filtrar)
       this.listaComisiones = this.getComisiones()
     } else {
       this.listaComisiones = []
@@ -49,7 +49,7 @@ export default {
     }
   },
   computed: {
-    ...mapState(useUsuariosStore, ['getUsuarioLogeado', 'isUserLoggedIn']),
+    ...mapState(useUsuariosStore, ['getUsuarioLogeado', 'isUserLoggedIn', 'isUserAdmin']),
     hoy() {
       return new Date()
     },
@@ -120,14 +120,20 @@ export default {
         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
         :rowsPerPageOptions="[5, 10, 25]"
         currentPageReportTemplate="Mostrando de {first} a {last} de {totalRecords} comisiones">
-        <template #header>
-          <div class="flex flex-wrap gap-2 align-items-center justify-content-between">
-            <Button label="Nueva" icon="pi pi-plus" severity="success" class="mr-2" @click="nuevaComision" />
-            <span>{{ filtrar ? "Mis Solicitudes" : "Comisiones Publicadas" }}</span>
-            <span class="p-input-icon-left">
-              <i class="pi pi-search" />
-              <InputText v-model="filters['global'].value" placeholder="Buscar..." />
-            </span>
+        <template #header class="gap-2">
+          <div class="flex flex-wrap grid-nogutter">
+            <div class="md:col-3 col-6 flex flex-order-1 md:flex-order-0 justify-content-start align-items-center">
+              <Button v-if="isUserAdmin" label="Nueva" icon="pi pi-plus" severity="success" @click="nuevaComision" />
+            </div>
+            <div class="md:col-6 col-12 flex flex-order-0 md:flex-order-1 justify-content-center align-items-center">
+              <span>{{ filtrar ? "Mis Solicitudes" : "Comisiones Publicadas" }}</span>
+            </div>
+            <div class="md:col-3 col-6 flex flex-order-2 md:flex-order-2 justify-content-end align-items-center">
+              <span class="p-input-icon-left">
+                <i class="pi pi-search" />
+                <InputText v-model="filters['global'].value" placeholder="Buscar..." />
+              </span>
+            </div>
           </div>
         </template>
 
