@@ -54,8 +54,8 @@ export default {
 </script>
 
 <template>
-  <div class="card relative z-2">
-    <div class="p-menubar p-component">
+  <div class="card">
+    <div class="p-menubar flex align-items-center justify-content-between">
       <div class="p-menubar-start logo">
         <router-link :to="{ name: 'comisiones' }">
           <img alt="logo" src="/src/assets/sc.png" class="mr-2" height="40">
@@ -70,6 +70,7 @@ export default {
         </a>
 
         <div class="dropdown-menu dropdown-menu-end p-menu-overlay p-menu p-component">
+          <!-- Contenido que se mostrará cuando no hay usuario logueado -->
           <ul v-if="!isLoggedIn">
             <li class="p-submenu-header flex" role="none">
               <div class="">
@@ -99,9 +100,9 @@ export default {
               </div>
             </li>
           </ul>
-
+          <!-- Contenido que se mostrará cuando un usuario está logueado -->
           <ul v-if="isLoggedIn">
-            <li class="p-submenu-header flex" role="none">
+            <li class="p-submenu-header flex align-items-center" role="none">
               <div class="">
                 <i class="pi pi-user mr-3" style="font-size: 1.5rem" />
               </div>
@@ -116,7 +117,6 @@ export default {
             <li class="p-menuitem" @click="misComisiones">
               <div class="p-menuitem-content">
                 <a class="p-menuitem-link" tabindex="-1">
-                  <!-- <span class="p-menuitem-icon pi pi-fw pi-user"></span> -->
                   <span class="p-menuitem-text">Mis Comisiones</span>
                 </a>
               </div>
@@ -124,7 +124,6 @@ export default {
             <li class="p-menuitem" @click="goHome">
               <div class="p-menuitem-content">
                 <a class="p-menuitem-link" tabindex="-1">
-                  <!-- <span class="p-menuitem-icon pi pi-fw pi-users"></span> -->
                   <span class="p-menuitem-text">Lista de comisiones</span>
                 </a>
               </div>
@@ -148,6 +147,7 @@ export default {
 </template>
 
 <style scoped>
+/* Fuente importada para el texto que acompaña al logo */
 @import url('https://fonts.googleapis.com/css2?family=Michroma&display=swap');
 
 .logo {
@@ -156,7 +156,6 @@ export default {
 }
 
 .texto-logo {
-  /* font-family: 'Odibee Sans', cursive; */
   font-family: 'Michroma', sans-serif;
   font-weight: 600;
   font-size: 1.5rem;

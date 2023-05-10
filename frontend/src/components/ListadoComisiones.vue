@@ -1,4 +1,5 @@
 <script>
+
 import { FilterMatchMode } from 'primevue/api';
 import { ConstantesComision } from '@/js/ConstantesComision';
 import { mapActions, mapState } from 'pinia'
@@ -9,7 +10,7 @@ import FormularioComision from './FormularioComision.vue'
 export default {
   props:
   {
-    filtrar: {
+    filtrar: { // Parámetro que controla el filtrado de las comisiones solicitadas
       type: Boolean,
       default: false
     }
@@ -31,10 +32,7 @@ export default {
     this.initFilters();
   },
   mounted() {
-    //    console.log("lista montada")
     if (!this.filtrar || !this.isUserLoggedIn) {
-      //      console.log(this.isUserLoggedIn)
-      //      console.log(this.filtrar)
       this.listaComisiones = this.getComisiones()
     } else {
       this.listaComisiones = []
@@ -93,7 +91,7 @@ export default {
       let plazo = comision.fechaLimite - this.hoy
       let estado
       const SEMANA = 7 * 24 * 3600 * 1000 // 1 Semana en milisegundos
-
+      // Configuración de la etiqueta en función del plazo de finalización
       if (plazo > SEMANA) {
         estado = { value: 'En plazo', severity: 'success' }
       } else if (plazo < 0) {
@@ -105,7 +103,7 @@ export default {
       return estado
     },
     rowClick(event) {
-      console.log(event.data.id)
+      //console.log(event.data.id)
       this.$router.push({ name: 'comision', params: { comisionId: event.data.id } })
     },
   }
@@ -115,11 +113,13 @@ export default {
 <template>
   <div>
     <div class="card">
+      <!-- Tabla con filtrado y ordenación de comisiones -->
       <DataTable ref="dt" :value="listaComisiones" dataKey="id" :paginator="true" :rows="10" :filters="filters"
         :row-hover="true" @row-click="rowClick"
         paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
         :rowsPerPageOptions="[5, 10, 25]"
         currentPageReportTemplate="Mostrando de {first} a {last} de {totalRecords} comisiones">
+        <!-- Header de la tabla que se configura en función del rol del usuairo -->
         <template #header class="gap-2">
           <div class="flex flex-wrap grid-nogutter">
             <div class="md:col-3 col-6 flex flex-order-1 md:flex-order-0 justify-content-start align-items-center">
@@ -149,6 +149,7 @@ export default {
       </DataTable>
     </div>
 
+    <!-- Formulario para crear una nueva comisión -->
     <FormularioComision :mostrar="mostrarFormulario" :comision="comisionTemp" @cancelar-formulario="cancelarNuevaComision"
       @guardarCambios="guardarComision" />
 

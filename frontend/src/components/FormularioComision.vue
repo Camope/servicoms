@@ -16,14 +16,14 @@ export default {
   data() {
     return {
       enviar: false,
+      tipoViogen: false,
+      tipoExtranjero: false,
     }
   },
   updated() {
-    console.log("Updated")
-    console.log(this.comision.especialidad)
-
-    this.comision.viogen = this.comision.riesgo ? true : false
-    this.comision.extranjero = this.comision.perfil ? true : false
+    // Configuracion de los InputSwitch
+    this.tipoViogen = this.comision.riesgo ? true : false
+    this.tipoExtranjero = this.comision.perfil ? true : false
   },
   created() {
   },
@@ -54,12 +54,12 @@ export default {
   },
   methods: {
     cambioViogen(event) {
-      this.comision.extranjero = false
+      this.tipoExtranjero = false
       this.comision.perfil = null
       if (!event) this.comision.riesgo = null
     },
     cambioExtranjero(event) {
-      this.comision.viogen = false
+      this.tipoViogen = false
       this.comision.riesgo = null
       if (!event) this.comision.perfil = null
     },
@@ -69,16 +69,15 @@ export default {
     },
     guardar() {
       this.enviar = true;
-
+      // Validación del formulario
       if (this.comision.localidad &&
         this.comision.empleo &&
         this.comision.especialidad &&
         this.comision.duracion &&
         this.comision.fechaLimite &&
-        (!this.comision.viogen || this.comision.riesgo) &&
-        (!this.comision.extranjero || this.comision.perfil)) {
+        (!this.tipoViogen || this.comision.riesgo) &&
+        (!this.tipoExtranjero || this.comision.perfil)) {
 
-        console.log("Comisión Guardada!!")
         this.enviar = false
         this.$emit('guardarCambios', this.comision)
       }
@@ -139,29 +138,30 @@ export default {
           required="true" :class="{ 'p-invalid': enviar && !comision.fechaLimite }" />
         <small class="p-error" v-if="enviar && !comision.fechaLimite">Introduzca fecha</small>
       </div>
-
+      
+      <!-- Selectores de tipo de comisión -->
       <div class="formgrid grid">
         <div class="field-radiobutton col-6">
-          <InputSwitch v-model="comision.viogen" @input="cambioViogen" id="viogen" />
+          <InputSwitch v-model="tipoViogen" @input="cambioViogen" id="viogen" />
           <label for="viogen" class="mb-3">Viogen</label>
         </div>
         <div class="field-radiobutton col-6">
-          <InputSwitch v-model="comision.extranjero" @input="cambioExtranjero" id="extranjero" />
+          <InputSwitch v-model="tipoExtranjero" @input="cambioExtranjero" id="extranjero" />
           <label for="extranjero" class="mb-3">Extranjero</label>
         </div>
         <div class="field col-6">
           <label for="selectorRiesgo" class="mb-3">Riesgo</label>
-          <Dropdown id="selectorRiesgo" v-model="comision.riesgo" :disabled="!comision.viogen" :options="riesgos"
+          <Dropdown id="selectorRiesgo" v-model="comision.riesgo" :disabled="!tipoViogen" :options="riesgos"
             placeholder="Seleccione Riesgo" class="w-full"
-            :class="{ 'p-invalid': enviar && !comision.riesgo && comision.viogen }" />
-          <small class="p-error" v-if="enviar && !comision.riesgo && comision.viogen">Seleccione riesgo</small>
+            :class="{ 'p-invalid': enviar && !comision.riesgo && tipoViogen }" />
+          <small class="p-error" v-if="enviar && !comision.riesgo && tipoViogen">Seleccione riesgo</small>
         </div>
         <div class="field col-6">
           <label for="selectorPerfil" class="mb-3">Perfil</label>
-          <Dropdown id="selectorPerfil" v-model="comision.perfil" :disabled="!comision.extranjero"
+          <Dropdown id="selectorPerfil" v-model="comision.perfil" :disabled="!tipoExtranjero"
             :options="perfiles" placeholder="Seleccione Perfil" class="w-full"
-            :class="{ 'p-invalid': enviar && !comision.perfil && comision.extranjero }" />
-          <small class="p-error" v-if="enviar && !comision.perfil && comision.extranjero">Seleccione
+            :class="{ 'p-invalid': enviar && !comision.perfil && tipoExtranjero }" />
+          <small class="p-error" v-if="enviar && !comision.perfil && tipoExtranjero">Seleccione
             perfil</small>
         </div>
       </div>

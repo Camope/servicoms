@@ -1,4 +1,5 @@
 <script>
+
 import { mapActions, mapState } from 'pinia'
 import { useComisionesStore } from '@/stores/comisiones'
 import { useUsuariosStore } from '@/stores/usuarios';
@@ -52,7 +53,7 @@ export default {
     mensajeEstado() {
       return this.esSolicitante ? "(Estado: solicitada)" : ""
     },
-    tipoComision() {
+    tipoComision() { // Configuración del mensaje a mostrar según el tipo de comisión
       let tipo
 
       if (this.comision.riesgo) tipo = `Viogen (riesgo: ${this.comision.riesgo})`
@@ -117,7 +118,7 @@ export default {
 
 <template>
   <div v-if="comision" class="card">
-
+    <!-- Muestra los datos en detalle de una comisión -->
     <Panel header="Datos de la comisión">
 
       <div class="field col-12 encabezado">
@@ -138,6 +139,7 @@ export default {
       </ul>
 
       <div class="flex justify-content-around">
+        <!-- Mostrará los botones de manera condicionada al rol de usuario y al estado de la comisión -->
         <Button label="Volver" icon="pi pi-arrow-left" severity="secondary" text @click="volver" />
         <Button v-if="muestraSolicitar" label="Solicitar" icon="pi pi-check" severity="success" text @click="solicitar" />
         <Button v-if="muestraEditar" label="Editar" icon="pi pi-pencil" severity="success" text @click="editar" />
@@ -145,8 +147,10 @@ export default {
       </div>
     </Panel>
 
+    <!-- Mostrará el listado de solicitantes en el caso de que el usuario logueado sea administrador -->
     <ListadoSolicitantes v-if="muestraListado" :comision-id="comision.id" />
 
+    <!-- Diálogo de confirmación de anulación de la solicitud/comisión condicionada al rol y estado de la comisión -->
     <Dialog v-model:visible="confirmacionAnulacion" :style="{ width: '450px' }" header="Confirmación" :modal="true">
       <div v-if="preguntaConfirmacion" class="confirmation-content">
         <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
@@ -161,12 +165,14 @@ export default {
       </template>
     </Dialog>
 
+    <!-- Diálogo de confirmación de la solicitud -->
     <Dialog v-model:visible="confirmacionSolicitud" :style="{ width: '450px' }" header="Confirmación" :modal="true">
       <div class="confirmation-content">
         <span style="color: red;">¡Su solicitud ha sido realizada!</span>
       </div>
     </Dialog>
 
+    <!-- Muestra el formulario de la comisión que se quiere editar (rol administrador) -->
     <FormularioComision :mostrar="mostrarFormulario" :comision="comisionTemp" @cancelar-formulario="cerrarFormulario"
       @guardarCambios="guardar" />
 
