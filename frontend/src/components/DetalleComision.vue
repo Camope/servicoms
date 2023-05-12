@@ -29,8 +29,8 @@ export default {
   computed: {
     ...mapState(useUsuariosStore, ['getUsuarioLogeado', 'isUserLoggedIn', 'isUserAdmin']),
     fecha() {
-      let options = { year: 'numeric', month: 'long', day: 'numeric' };
-      return (new Date(Number(this.comision.fechaLimite))).toLocaleDateString('es-ES', options);
+      let options = { year: 'numeric', month: 'long', day: 'numeric' }
+      return this.comision.fechaLimite.toLocaleDateString('es-ES', options)
     },
     esPublicador() {
       return true // Los administradores tendrán siempre rol de publicador

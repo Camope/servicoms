@@ -33,6 +33,12 @@ export default {
     hoy() {
       return new Date()
     },
+    fecha() {
+      let options = { year: 'numeric', month: 'numeric', day: 'numeric' }
+      console.log("fecha")
+      console.log(typeof this.comision.fechaLimite)
+      return (new Date(Number(this.comision.fechaLimite))).toLocaleDateString('es-ES', options)
+    },
     empleos() {
       return ConstantesComision.getEmpleos()
     },
@@ -65,6 +71,7 @@ export default {
     },
     cancelar() {
       this.enviar = false
+      console.log(this.fecha)
       this.$emit('cancelarFormulario')
     },
     guardar() {

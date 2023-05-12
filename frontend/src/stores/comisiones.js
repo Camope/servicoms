@@ -13,6 +13,7 @@ export const useComisionesStore = defineStore('comisiones', {
     initLista() {
       if (!this.listaComisiones) {
         this.listaComisiones = comisionesJSON
+        this.listaComisiones.forEach(c => c.fechaLimite = new Date(Number(c.fechaLimite)))
       }
     },
     getComisiones() {
