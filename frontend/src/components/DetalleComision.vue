@@ -57,7 +57,7 @@ export default {
       let tipo
 
       if (this.comision.riesgo) tipo = `Viogen (riesgo: ${this.comision.riesgo})`
-      else if (this.comision.perfil) tipo = `Extranjero (perfil: ${this.comision.riesgo})`
+      else if (this.comision.perfil) tipo = `Extranjero (perfil: ${this.comision.perfil})`
       else tipo = 'Normal'
 
       return tipo

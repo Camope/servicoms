@@ -103,7 +103,6 @@ export default {
       return estado
     },
     rowClick(event) {
-      //console.log(event.data.id)
       this.$router.push({ name: 'comision', params: { comisionId: event.data.id } })
     },
   }
