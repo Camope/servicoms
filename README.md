@@ -28,6 +28,6 @@ Las CS  podrán tener ninguna, una o muchas solicitudes.
    1. Repositorio proyecto: https://git.institutomilitar.com/-/ide/project/PedroggDIM/comisiones
 7. **Despliegue** en Internet:
    1. API: 
-   1. Web:  
+   1. Web: https://servicoms.netlify.app
 
 
