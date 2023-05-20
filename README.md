@@ -10,12 +10,12 @@ Un usuario admin podrá dar de alta y publicar las CS y podrá consultar las sol
 
 Un usuario user podrá consultar las Comisiones de Servicio ofertadas y con un formulario estándar podría solicitar la de interés (una o muchas).  
 
-Las CS  podrán tener ninguna, una o muchas solicitudes.  
+Las CS podrán tener ninguna, una o muchas solicitudes.  
 
 
 ## Diagrama de clases de diseño
 
-![Diagrama de Diseño MVP](https://git.institutomilitar.com/PedroggDIM/comisiones/-/wikis/uploads/0a07745b719db2ed16094117dfadde98/Diagrama_de_clases.png)
+![Diagrama de Diseño MVP](https://git.institutomilitar.com/PedroggDIM/comisiones/-/wikis/imagenes/diagrama_clases_readme.png)
 
 
 **Cumplimiento de requisitos**
@@ -25,9 +25,10 @@ Las CS  podrán tener ninguna, una o muchas solicitudes.
 4. **Listado**: Se mostrarán las Comisiones de Servicio y sus Solicitudes
 5. **CRUD**: De las Comisiones de Servicio publicadas.
 6. **URLs** del proyecto:
-   1. Repositorio proyecto: https://git.institutomilitar.com/-/ide/project/PedroggDIM/comisiones
+   1. Repositorio proyecto: https://git.institutomilitar.com/PedroggDIM/comisiones
+   2. Librería: https://github.com/Camope/servicomsLib.git
 7. **Despliegue** en Internet:
    1. API: 
-   1. Web: https://servicoms.netlify.app
+   2. Web: https://servicoms.netlify.app
 
 
