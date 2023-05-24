@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?> 
+<entity-mappings xmlns="http://java.sun.com/xml/ns/persistence/orm" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd" 
+	version="1.0"> 
+    <mapped-superclass class="es.interior.servicomsLib.SolicitudImpl" access="FIELD">
+        <attributes>
+            <basic name="fechaSolicitud" optional="false">
+				<column name="fechaSolicitud"/>
+			</basic>
+			<many-to-one name="comision" target-entity="es.interior.serviComsApi.entidades.ComisionApi" fetch="LAZY" optional="false">
+				<join-column name="comision_id"/>
+			</many-to-one>
+			<many-to-one name="usuario" target-entity="es.interior.serviComsApi.entidades.UsuarioApi" fetch="LAZY" optional="false">
+				<join-column name="usuario_id"/>
+			</many-to-one>
+        </attributes>
+     </mapped-superclass>
+</entity-mappings>
