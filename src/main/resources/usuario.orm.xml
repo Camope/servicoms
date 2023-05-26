@@ -12,7 +12,7 @@
 				<column name="apellidos"/>
 			</basic>
 			<basic name="tip" optional="false">
-				<column name="tip" />
+				<column name="tip" unique="true"/>
 			</basic>
 			<basic name="empleo" optional="false">
 				<column name="empleo"/>

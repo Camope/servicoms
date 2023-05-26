@@ -4,7 +4,12 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm http://java.sun.com/xml/ns/persistence/orm_1_0.xsd" 
 	version="1.0"> 
     <entity class="es.interior.serviComsApi.entidades.SolicitudApi" access="FIELD">
-		<table name="SOLICITUDES"/>
+		<table name="SOLICITUDES">
+       		<unique-constraint>
+            	<column-name>comision_id</column-name>
+            	<column-name>usuario_id</column-name>
+        	</unique-constraint>
+		</table>
         <attributes>
         	<id name="id">
                 <generated-value strategy="IDENTITY"/>
