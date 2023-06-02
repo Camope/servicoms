@@ -3,6 +3,9 @@ package es.interior.serviComsApi.rest;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.slf4j.Logger;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,10 +17,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import es.interior.serviComsApi.entidades.ComisionApi;
 import es.interior.serviComsApi.ServiComsApiApplication;
 import es.interior.serviComsApi.entidades.UsuarioApi;
 import es.interior.serviComsApi.excepciones.RegisterNotFoundException;
 import es.interior.serviComsApi.repositorios.UsuarioRepositorio;
+import es.interior.servicomsLib.Solicitud;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -26,16 +31,22 @@ public class UsuarioController {
 	private final UsuarioRepositorio repositorio;
 	private final UsuarioAssembler assembler;
 	private final UsuarioListaAssembler listaAssembler;
+	private final SolicitudAssembler<Solicitud> solicitudAssembler;
+	private final ComisionListaAssembler comisionListaAssembler;
 	private final Logger log;
 
-	UsuarioController(UsuarioRepositorio repositorio, UsuarioAssembler assembler, UsuarioListaAssembler listaAssembler) {
+	UsuarioController(UsuarioRepositorio repositorio, UsuarioAssembler assembler, UsuarioListaAssembler listaAssembler,
+			SolicitudAssembler<Solicitud> solicitudAssembler, ComisionListaAssembler comisionListaAssembler) {
 
 		this.repositorio = repositorio;
 		this.assembler = assembler;
 		this.listaAssembler = listaAssembler;
+		this.solicitudAssembler = solicitudAssembler;
+		this.comisionListaAssembler = comisionListaAssembler;
 
 		log = ServiComsApiApplication.log;
 	}
+
 
 	@GetMapping("{id}")
 	public UsuarioModel getOne(@PathVariable Long id) {
@@ -82,6 +93,25 @@ public class UsuarioController {
 		return assembler.toModel(usuario);
 	}
 
+	@GetMapping("{id}/solicitudes")
+	public CollectionModel<SolicitudModel> getSolicitudes(@PathVariable Long id) {
+		List<Solicitud> solicitudes = repositorio.findById(id)
+				.orElseThrow(() -> new RegisterNotFoundException(id, "usuario")).getSolicitudes();
+
+		return solicitudAssembler.toCollection(solicitudes).add(linkTo(methodOn(UsuarioController.class).getOne(id))
+				.slash("solicitudes").withSelfRel());
+	}
+
+	@GetMapping("{id}/comisiones")
+	public CollectionModel<ComisionListaModel> getComisiones(@PathVariable Long id) {
+
+		List<ComisionApi> comisiones = repositorio.findById(id)
+				.orElseThrow(() -> new RegisterNotFoundException(id, "usuario")).getSolicitudes().stream()
+				.map(c -> (ComisionApi) c.getComision()).collect(Collectors.toList());
+
+		return comisionListaAssembler.toCollection(comisiones).add(
+				linkTo(methodOn(UsuarioController.class).getOne(id)).slash("comisiones").withSelfRel());
+	}
 
 //	@PatchMapping("{id}/password")
 //	public void passChange(@PathVariable Long id, @Valid @RequestBody String password) {
