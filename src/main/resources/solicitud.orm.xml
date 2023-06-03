@@ -6,7 +6,7 @@
     <mapped-superclass class="es.interior.servicomsLib.SolicitudImpl" access="FIELD">
         <attributes>
             <basic name="fechaSolicitud" optional="false">
-				<column name="fechaSolicitud"/>
+				<column name="fechaSolicitud" column-definition="TIMESTAMP WITH TIME ZONE"/>
 			</basic>
 			<many-to-one name="comision" target-entity="es.interior.serviComsApi.entidades.ComisionApi" fetch="LAZY" optional="false">
 				<join-column name="comision_id"/>

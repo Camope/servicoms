@@ -1,13 +1,11 @@
 package es.interior.serviComsApi.utils;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
+import java.time.temporal.ChronoUnit;
 
 public class Utilidades {
 
-//	public static final Long UMBRAL_ESTADO = 7l;  
-//	public static final Long UMBRAL_ESTADO_MS = UMBRAL_ESTADO * 24 * 3600 * 1000;
-	
-	public static Long msToDeadline(Date deadlineDate) {
-		return deadlineDate.getTime() - System.currentTimeMillis();
+	public static Long secToDeadline(OffsetDateTime deadlineDate) {
+		return ChronoUnit.SECONDS.between(OffsetDateTime.now(), deadlineDate);
 	}
 }

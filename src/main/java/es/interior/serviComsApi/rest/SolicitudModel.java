@@ -1,20 +1,19 @@
 package es.interior.serviComsApi.rest;
 
-import java.util.Date;
-
+import java.time.OffsetDateTime;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
 @Relation(itemRelation = "solicitud", collectionRelation = "listaSolicitudes") // define la etiqueta después de _embedded para el usuario retornado
 public class SolicitudModel extends RepresentationModel<SolicitudModel> {
 
-	private Date fechaSolicitud;
+	private OffsetDateTime fechaSolicitud;
 
-	public Date getFechaSolicitud() {
+	public OffsetDateTime getFechaSolicitud() {
 		return fechaSolicitud;
 	}
 
-	public void setFechaSolicitud(Date fechaSolicitud) {
+	public void setFechaSolicitud(OffsetDateTime fechaSolicitud) {
 		this.fechaSolicitud = fechaSolicitud;
 	}
 

@@ -26,7 +26,7 @@ public class ComisionListaAssembler implements RepresentationModelAssembler<Comi
 		model.setLocalidad(entity.getLocalidad());
 		model.setEspecialidad(entity.getEspecialidad());
 		model.setEmpleo(entity.getEmpleo());
-		model.setEstado(Utilidades.msToDeadline(entity.getFechaLimite()));
+		model.setEstado(Utilidades.secToDeadline(entity.getFechaLimite()));
 
 		model.add(linkTo(methodOn(ComisionController.class).getOne(entity.getId())).withSelfRel());
 		return model;

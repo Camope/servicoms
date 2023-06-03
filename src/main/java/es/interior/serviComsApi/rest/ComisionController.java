@@ -3,7 +3,6 @@ package es.interior.serviComsApi.rest;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -103,8 +102,6 @@ public class ComisionController {
 
 	@PostMapping
 	public ComisionListaModel add(@RequestBody ComisionModel model) {
-
-		model.setFechaPublicacion(new Date());
 
 		ComisionApi comision = repositorio.save(assembler.toEntity(model));
 

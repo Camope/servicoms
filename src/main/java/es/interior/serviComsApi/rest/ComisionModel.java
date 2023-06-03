@@ -1,6 +1,6 @@
 package es.interior.serviComsApi.rest;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
 import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
@@ -14,8 +14,8 @@ public class ComisionModel extends RepresentationModel<ComisionModel> {
 	private String localidad;
 	private String especialidad;
 	private String empleo;
-	private Date fechaPublicacion;
-	private Date fechaLimite;
+	private OffsetDateTime fechaPublicacion;
+	private OffsetDateTime fechaLimite;
 	private Integer duracion;
 	private String detalles;
 	private Tipo tipo;
@@ -55,19 +55,19 @@ public class ComisionModel extends RepresentationModel<ComisionModel> {
 		this.empleo = empleo;
 	}
 
-	public Date getFechaPublicacion() {
+	public OffsetDateTime getFechaPublicacion() {
 		return fechaPublicacion;
 	}
 
-	public void setFechaPublicacion(Date fechaPublicacion) {
+	public void setFechaPublicacion(OffsetDateTime fechaPublicacion) {
 		this.fechaPublicacion = fechaPublicacion;
 	}
 
-	public Date getFechaLimite() {
+	public OffsetDateTime getFechaLimite() {
 		return fechaLimite;
 	}
 
-	public void setFechaLimite(Date fechaLimite) {
+	public void setFechaLimite(OffsetDateTime fechaLimite) {
 		this.fechaLimite = fechaLimite;
 	}
 

@@ -18,10 +18,10 @@
 				<column name="empleo"/>
 			</basic>
 			<basic name="fechaPublicacion" optional="false">
-				<column name="fechaPublicacion"/>
+				<column name="fechaPublicacion" column-definition="TIMESTAMP WITH TIME ZONE"/>
 			</basic>
 			<basic name="fechaLimite" optional="false">
-				<column name="fechaLimite"/>
+				<column name="fechaLimite" column-definition="TIMESTAMP WITH TIME ZONE"/>
 			</basic>
 			<basic name="duracion" optional="false">
 				<column name="duracion"/>

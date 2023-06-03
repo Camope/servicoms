@@ -3,8 +3,7 @@ package es.interior.serviComsApi.rest;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import java.util.Date;
-
+import java.time.OffsetDateTime;
 import org.springframework.hateoas.server.RepresentationModelAssembler;
 import org.springframework.stereotype.Component;
 
@@ -33,7 +32,7 @@ public class ComisionAssembler implements RepresentationModelAssembler<ComisionA
 		model.setTipo(entity.getTipo());
 		model.setPerfil(entity.getTipo() == Tipo.EXTRANJERO ? ((ComisionExtranjero)entity).getPerfil() : null);
 		model.setRiesgo(entity.getTipo() == Tipo.VIOGEN ? ((ComisionViogen)entity).getRiesgo() : null);
-		model.setEstado(Utilidades.msToDeadline(entity.getFechaLimite()));
+		model.setEstado(Utilidades.secToDeadline(entity.getFechaLimite()));
 		
 		model.add(linkTo(methodOn(ComisionController.class).getOne(entity.getId())).withSelfRel());
 
@@ -60,7 +59,7 @@ public class ComisionAssembler implements RepresentationModelAssembler<ComisionA
 		comision.setLocalidad(model.getLocalidad());
 		comision.setEspecialidad(model.getEspecialidad());
 		comision.setEmpleo(model.getEmpleo());
-		comision.setFechaPublicacion(new Date());
+		comision.setFechaPublicacion(OffsetDateTime.now());
 		comision.setFechaLimite(model.getFechaLimite());
 		comision.setDuracion(model.getDuracion());
 		comision.setDetalles(model.getDetalles());

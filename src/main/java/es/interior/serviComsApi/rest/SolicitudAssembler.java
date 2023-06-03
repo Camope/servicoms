@@ -3,7 +3,7 @@ package es.interior.serviComsApi.rest;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import java.util.Date;
+import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -40,7 +40,7 @@ public class SolicitudAssembler <T extends Solicitud> implements RepresentationM
 
 		SolicitudApi solicitud = new SolicitudApi();
 
-		solicitud.setFechaSolicitud(new Date());
+		solicitud.setFechaSolicitud(OffsetDateTime.now());
 		solicitud.setComision(model.getComision());
 		solicitud.setUsuario(model.getUsuario());
 
