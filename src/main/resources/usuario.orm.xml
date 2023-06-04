@@ -20,7 +20,11 @@
 			<basic name="email" optional="false">
 				<column name="email"/>
 			</basic>
-			<one-to-many name="solicitudes" mapped-by="usuario" target-entity="es.interior.serviComsApi.entidades.SolicitudApi"/>
+			<one-to-many name="solicitudes" mapped-by="usuario" target-entity="es.interior.serviComsApi.entidades.SolicitudApi">
+				<cascade>
+					<cascade-remove/>
+				</cascade>
+			</one-to-many>
         </attributes>
      </mapped-superclass>
 </entity-mappings>

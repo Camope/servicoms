@@ -29,7 +29,11 @@
 			<basic name="detalles">
 				<column name="detalles" column-definition="varchar(20000)"/>
 			</basic>
-			<one-to-many name="solicitudes" mapped-by="comision" target-entity="es.interior.serviComsApi.entidades.SolicitudApi"/>
+			<one-to-many name="solicitudes" mapped-by="comision" target-entity="es.interior.serviComsApi.entidades.SolicitudApi">
+				<cascade>
+					<cascade-remove/>
+				</cascade>
+			</one-to-many>
 			
         </attributes>
      </mapped-superclass>

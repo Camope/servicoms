@@ -25,7 +25,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	
 	// Librería de ServiComs externa
-	implementation 'com.github.Camope:servicomsLib:V1.0.0'
+	implementation 'com.github.Camope:servicomsLib:v1.1.0'
 }
 
 tasks.named('test') {
