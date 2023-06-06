@@ -1,4 +1,4 @@
-import { createApp } from 'vue'
+import { createApp, watch } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 import { createPinia } from 'pinia'
 
@@ -8,6 +8,8 @@ import About from '@/components/About.vue'
 import NotFound from '@/components/NotFound.vue'
 import ListadoComisiones from '@/components/ListadoComisiones.vue'
 import DetalleComision from '@/components/DetalleComision.vue'
+import ListadoComisionesNuevo from '../components/ListadoComisionesNuevo.vue'
+import DetalleComisionNuevo from '../components/DetalleComisionNuevo.vue'
 
 // Importación de componentes de PrimeVue
 import PrimeVue from 'primevue/config'
@@ -24,6 +26,8 @@ import Calendar from 'primevue/calendar'
 import InputSwitch from 'primevue/inputswitch'
 import Panel from 'primevue/panel'
 import Divider from 'primevue/divider'
+import ProgressSpinner from 'primevue/progressspinner'
+import Paginator from 'primevue/paginator'
 import Menu from 'primevue/menu'
 
 // Import our custom CSS
@@ -48,9 +52,11 @@ const routes = [
     // Eliminar redirección cuando esté desarrollada el home
     { path: '/', redirect: { name: 'comisiones' } },  //name: 'home', component: About },
     { path: '/about', name: 'about', component: About },
-    { path: '/miscomisiones', name: 'miscomisiones', component: ListadoComisiones, props: { filtrar: true } },
+    { path: '/miscomisiones', name: 'miscomisiones', component: ListadoComisionesNuevo, props: { filtrar: true } },
     { path: '/comisiones', name: 'comisiones', component: ListadoComisiones },
+    { path: '/comisionesnuevo', name: 'comisionesnuevo', component: ListadoComisionesNuevo },
     { path: '/comision/:comisionId', name: 'comision', component: DetalleComision, props: true },
+    { path: '/comisionnuevo/:comisionId', name: 'comisionnuevo', component: DetalleComisionNuevo, props: true },
     { path: '/:pathMatch(.*)*', name: 'notFound', component: NotFound },
 ]
 
@@ -60,6 +66,14 @@ const router = createRouter({
 })
 
 const app = createApp(App)
+
+watch(
+    pinia.state,
+    (state) => {
+        localStorage.setItem("usuarioLogueado", JSON.stringify(state.usuariosnuevo.usuarioLogueado))
+    },
+    { deep: true }
+);
 
 app.use(pinia)
 app.use(router)
@@ -85,6 +99,8 @@ app.component('Calendar', Calendar)
 app.component('InputSwitch', InputSwitch)
 app.component('Panel', Panel)
 app.component('Divider', Divider)
+app.component('ProgressSpinner', ProgressSpinner)
+app.component('Paginator', Paginator)
 // app.component('Menu', Menu)
 
 app.mount('#app')
