@@ -1,6 +1,6 @@
 <script>
 import { mapActions, mapState } from 'pinia'
-import { useUsuariosStore } from '@/stores/usuarios'
+import { useUsuariosNuevoStore } from '@/stores/usuariosnuevo'
 
 export default {
   props: [],
@@ -15,35 +15,30 @@ export default {
   mounted() {
   },
   computed: {
-    ...mapState(useUsuariosStore, [ 'getUsuarioLogeado', 'isUserLoggedIn', 'isUserAdmin' ]),
-    isLoggedIn() {
-      return this.isUserLoggedIn
-    },
-    isAdmin() {
-      return this.isUserAdmin
-    },
+    ...mapState(useUsuariosNuevoStore, [ 'usuarioLogueado', 'isLoggedIn', 'isAdmin' ]),
     nombre() {
-      return this.getUsuarioLogeado.nombre
+      return this.isLoggedIn ? this.usuarioLogueado.nombre : ''
     }
   },
   methods: {
-    ...mapActions(useUsuariosStore, ['userLogin', 'userLogout']),
-    muestraMenuLogout(event) {
-      this.$refs.menu.toggle(event);
-    },
+    ...mapActions(useUsuariosNuevoStore, ['getUsuarioPorId', 'logoutUser']),
+    // muestraMenuLogout(event) {
+    //   this.$refs.menu.toggle(event);
+    // },
     login(role) {
       if (role == "admin") {
-        this.userLogin(4) // El usuario 4 es es administrador en los datos de prueba
+        this.getUsuarioPorId(1) // El usuario 1 es es administrador en los datos de prueba
       } else {
-        this.userLogin(Math.floor(Math.random() * 3) + 1) // Selecciona cualquier usuario (1-3) no admin aleatoriamente
+        this.getUsuarioPorId(3) //this.userLogin(Math.floor(Math.random() * 3) + 1) // Selecciona cualquier usuario (1-3) no admin aleatoriamente
       }
+      this.goHome()
     },
     logout() {
-      this.userLogout()
-      this.$router.push({ name: "comisiones" })
+      this.logoutUser()
+      this.goHome()
     },
     goHome() {
-      this.$router.push({ name: "comisiones" })
+      this.$router.push({ name: "comisionesnuevo" })
     },
     misComisiones() {
       this.$router.push({ name: "miscomisiones" })
