@@ -22,14 +22,44 @@ function apiRequest(path, method, body) {
   return axios.request(config)
 }
 
+export async function getUrlApi(url) {
+  await resolveAfterXSeconds(2000)
+  return apiRequest(url, 'get')
+}
+
+export async function putUrlApi(url, body) {
+  await resolveAfterXSeconds(2000)
+  return apiRequest(url, 'put', body)
+}
+
+export async function deleteUrlApi(url) {
+  await resolveAfterXSeconds(2000)
+  return apiRequest(url, 'delete')
+}
+
+export async function getUsuariosApi() {
+  await resolveAfterXSeconds(2000)
+  return apiRequest(`${host}/usuarios`, 'get')
+}
+
 export async function getUsuarioPorIdApi(usuarioId) {
   await resolveAfterXSeconds(2000)
   return apiRequest(`${host}/usuarios/${usuarioId}`, 'get')
 }
 
-export async function getSolicitudesPorUsuarioApi(usuarioId) {
+export async function postUsuarioApi(usuario) {
   await resolveAfterXSeconds(2000)
-  return apiRequest(`${host}/usuarios/${usuarioId}/solicitudes`, 'get')
+  return apiRequest(`${host}/usuarios`, 'post', usuario)
+}
+
+export async function patchUsuarioPasswordApi(userLink, password) {
+  await resolveAfterXSeconds(2000)
+  return apiRequest(`${userLink}/password`, 'patch', password)
+}
+
+export async function getSolicitudesPorUsuarioApi(userLink) {
+  await resolveAfterXSeconds(2000)
+  return apiRequest(`${userLink}/solicitudes`, 'get')
 }
 
 export async function getComisionesPorUsuarioApi(usuarioId) {
@@ -64,11 +94,10 @@ export async function deleteComisionApi(id) {
   return apiRequest(`${host}/comisiones/${id}`, 'delete')
 }
 
-export async function getUsuariosPorComisionApi(id) {
+export async function getSolicitantesPorComisionApi(comisionLink) {
   await resolveAfterXSeconds(2000)
-  return apiRequest(`${host}/comisiones/${id}/usuarios`, 'get')
+  return apiRequest(`${comisionLink}/usuarios`, 'get')
 }
-
 
 export async function postSolicitudApi(comision, usuario) {
   await resolveAfterXSeconds(2000)

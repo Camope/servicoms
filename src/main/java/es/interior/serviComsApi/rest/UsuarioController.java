@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -113,15 +114,15 @@ public class UsuarioController {
 				linkTo(methodOn(UsuarioController.class).getOne(id)).slash("comisiones").withSelfRel());
 	}
 
-//	@PatchMapping("{id}/password")
-//	public void passChange(@PathVariable Long id, @Valid @RequestBody String password) {
-//
-//		Usuario usuarioActualizado = repositorio.findById(id).map(u -> {
-//			u.setPassword(new BCryptPasswordEncoder().encode(password));
-//			return repositorio.save(u);
-//		}).orElseThrow(() -> new RegisterNotFoundException(id, "usuario"));
-//		
-//		log.info("Cambiada la contraseña del usuario " + usuarioActualizado);
-//	}
+	@PatchMapping("{id}/password")
+	public void passChange(@PathVariable Long id, @RequestBody String password) {
+
+		UsuarioApi usuarioActualizado = repositorio.findById(id).map(u -> {
+			u.setPassword(password);
+			return repositorio.save(u);
+		}).orElseThrow(() -> new RegisterNotFoundException(id, "usuario"));
+		
+		log.info("Cambiada la contraseña del usuario " + usuarioActualizado);
+	}
 
 }

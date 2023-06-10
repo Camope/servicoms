@@ -70,5 +70,11 @@ export const ConstantesComision = {
       'Alemán (3.3.3.3)',
       'Alemán (4.4.4.4)',
     ]
-  }
+  },
+  getRoles() {
+    return [
+      'ADMIN',
+      'NO_ADMIN'
+    ]
+  },
 }

@@ -1,162 +1,129 @@
 <script>
 
-import { FilterMatchMode } from 'primevue/api';
-import { ConstantesComision } from '@/js/ConstantesComision';
 import { mapActions, mapState } from 'pinia'
 import { useComisionesStore } from '@/stores/comisiones'
-import { useUsuariosStore } from '@/stores/usuarios';
-import FormularioComision from './FormularioComision.vue'
+import { useUsuariosStore } from '@/stores/usuarios'
+import FormularioComision from '@/components/FormularioComision.vue'
+import Lista from '@/components/listado/Lista.vue';
+import DialogoError from '@/components/DialogoError.vue';
+import PanelTitulado from '@/components/PanelTitulado.vue'
 
 export default {
   props:
   {
-    filtrar: { // Parámetro que controla el filtrado de las comisiones solicitadas
+    filtrar: {
       type: Boolean,
       default: false
     }
   },
-  components: { FormularioComision },
+  components: { FormularioComision, Lista, DialogoError, PanelTitulado },
   emits: [],
   data() {
     return {
       mostrarFormulario: false,
-      filters: {},
       enviar: false,
-      listaComisiones: [],
-      comisionTemp: {}
+      palabraBuscada: '',
+      configList: [{ campo: 'empleo', title: 'Empleo', styles: 'max-width: 10rem;' },
+      { campo: 'puesto', title: 'Vacante', styles: '' },
+      { campo: 'especialidad', title: 'Especialidad', styles: '' },
+      { campo: 'localidad', title: 'Localidad', styles: '' },
+      { campo: 'estado', title: 'Estado', styles: 'max-width: 10rem; justify-content: center;' }],
+      camposDeBusqueda: ['puesto', 'empleo', 'especialidad', 'localidad'],
     }
   },
   updated() {
   },
   created() {
-    this.initFilters();
+    this.updateListaComisiones(this.filtrar ? this.usuarioLogueado : null)
   },
   mounted() {
-    if (!this.filtrar || !this.isUserLoggedIn) {
-      this.listaComisiones = this.getComisiones()
-    } else {
-      this.listaComisiones = []
-      this.getUsuarioLogeado.solicitudes.forEach(id => {
-        let comision = this.getComisionPorId(id)
-        if (comision) {
-          this.listaComisiones.push(this.getComisionPorId(id))
-        } else {
-          console.log("La comisión ID:" + id + " no existe")
-        }
-      })
-    }
   },
   computed: {
-    ...mapState(useUsuariosStore, ['getUsuarioLogeado', 'isUserLoggedIn', 'isUserAdmin']),
-    hoy() {
-      return new Date()
+    ...mapState(useUsuariosStore, ['usuarioLogueado', 'isLoggedIn', 'isAdmin']),
+    ...mapState(useComisionesStore, ['listaComisiones', 'loading', 'errored']),
+    mostrarLista() {
+      return (this.listaComisiones.length > 0)
     },
-    empleos() {
-      return ConstantesComision.getEmpleos()
-    },
-    especialidades() {
-      return ConstantesComision.getEspecialidades()
-    },
-    duracionMaxima() {
-      return ConstantesComision.getDuracionMaxima()
-    },
-    riesgos() {
-      return ConstantesComision.getRiesgos()
-    },
-    perfiles() {
-      return ConstantesComision.getPerfiles()
-    }
+    listaComisionesParaMostrar() {
+      let listaComisionesFiltrada = this.listaComisiones
 
+      if (this.palabraBuscada != '') {
+        listaComisionesFiltrada = this.listaComisiones.filter(c => {
+          for (const campo of this.camposDeBusqueda) {
+            if (typeof c[campo] === 'string' || c[campo] instanceof String) {
+              if (c[campo].toLowerCase().includes(this.palabraBuscada.toLowerCase())) {
+                return true
+              }
+            }
+          }
+          return false
+        })
+      }
+
+      return listaComisionesFiltrada
+    }
   },
   methods: {
-    ...mapActions(useComisionesStore, ['getComisiones', 'getComisionPorId', 'setComision']),
+    ...mapActions(useComisionesStore, ['updateListaComisiones', 'sortListaComisiones',
+      'searchInListaComisiones', 'saveComision',
+      'resetEstados', 'seleccionaComision', 'getComisionId']),
     nuevaComision() {
-      this.comisionTemp = {}
       this.mostrarFormulario = true
     },
-    cancelarNuevaComision() {
+    cerrarFormulario() {
       this.mostrarFormulario = false
     },
     guardarComision(data) {
       console.log("guardar...")
-      this.setComision(data)
-      this.mostrarFormulario = false
+      console.log(data)
+      this.saveComision(data)
+      this.cerrarFormulario()
     },
-    initFilters() {
-      this.filters = {
-        'global': { value: null, matchMode: FilterMatchMode.CONTAINS },
+    seleccionarComision(comision) {
+      if (!this.loading) {
+        this.seleccionaComision(comision._links.self.href)
+        this.$router.push({ name: 'detallecomision' })
       }
     },
-    getStatusLabel(comision) {
-      let plazo = comision.fechaLimite - this.hoy
-      let estado
-      const SEMANA = 7 * 24 * 3600 * 1000 // 1 Semana en milisegundos
-      // Configuración de la etiqueta en función del plazo de finalización
-      if (plazo > SEMANA) {
-        estado = { value: 'En plazo', severity: 'success' }
-      } else if (plazo < 0) {
-        estado = { value: 'Cerrada', severity: 'danger' }
-      } else {
-        estado = { value: 'Finalizando', severity: 'warning' }
-      }
-
-      return estado
+    buscar(palabra) {
+      this.palabraBuscada = palabra
     },
-    rowClick(event) {
-      this.$router.push({ name: 'comision', params: { comisionId: event.data.id } })
-    },
+    gestionarErrores(event) {
+      if (!event) this.resetEstados()
+    }
   }
 }
 </script>
 
 <template>
   <div>
-    <div class="card">
-      <!-- Tabla con filtrado y ordenación de comisiones -->
-      <DataTable ref="dt" :value="listaComisiones" dataKey="id" :paginator="true" :rows="10" :filters="filters"
-        :row-hover="true" @row-click="rowClick"
-        paginatorTemplate="FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink CurrentPageReport RowsPerPageDropdown"
-        :rowsPerPageOptions="[5, 10, 25]"
-        currentPageReportTemplate="Mostrando de {first} a {last} de {totalRecords} comisiones">
-        <!-- Header de la tabla que se configura en función del rol del usuairo -->
-        <template #header class="gap-2">
-          <div class="flex flex-wrap grid-nogutter">
-            <div class="md:col-3 col-6 flex flex-order-1 md:flex-order-0 justify-content-start align-items-center">
-              <Button v-if="isUserAdmin" label="Nueva" icon="pi pi-plus" severity="success" @click="nuevaComision" />
-            </div>
-            <div class="md:col-6 col-12 flex flex-order-0 md:flex-order-1 justify-content-center align-items-center">
-              <span>{{ filtrar ? "Mis Solicitudes" : "Comisiones Publicadas" }}</span>
-            </div>
-            <div class="md:col-3 col-6 flex flex-order-2 md:flex-order-2 justify-content-end align-items-center">
-              <span class="p-input-icon-left">
-                <i class="pi pi-search" />
-                <InputText v-model="filters['global'].value" placeholder="Buscar..." />
-              </span>
-            </div>
-          </div>
-        </template>
 
-        <Column field="empleo" header="Empleo" sortable style="min-width:10rem"></Column>
-        <Column field="puesto" header="Vacante" sortable style="min-width:10rem"></Column>
-        <Column field="especialidad" header="Especialidad" sortable style="min-width:10rem"></Column>
-        <Column field="localidad" header="Localidad" sortable style="min-width:10rem"></Column>
-        <Column field="fechaLimite" header="Estado" sortable style="min-width:10rem; text-align: center;">
-          <template #body="slotProps">
-            <Tag :value="getStatusLabel(slotProps.data).value" :severity="getStatusLabel(slotProps.data).severity" />
-          </template>
-        </Column>
-      </DataTable>
-    </div>
+    <PanelTitulado :title="filtrar ? 'Mis Solicitudes' : 'Comisiones Publicadas'" :show-button="isAdmin"
+      button-label="Nueva" @click="nuevaComision" @search="buscar">
+      <ProgressSpinner v-if="loading" :class="['spinner-6', { 'overlay-spinner': mostrarLista }]" />
+      <Lista v-if="mostrarLista" :elements="listaComisionesParaMostrar" :titles="configList"
+        @row-click="seleccionarComision" />
+    </PanelTitulado>
 
     <!-- Formulario para crear una nueva comisión -->
-    <FormularioComision :mostrar="mostrarFormulario" :comision="comisionTemp" @cancelar-formulario="cancelarNuevaComision"
-      @guardarCambios="guardarComision" />
+    <FormularioComision v-if="mostrarFormulario" @cancelar="cerrarFormulario"
+      @guardar="guardarComision" />
+
+    <!-- Diálogo de Error -->
+    <DialogoError :visible="errored" @update:visible="gestionarErrores" />
 
   </div>
 </template>
 
-<style>
-.p-datatable div .p-column-header-content {
-  display: inline-flex;
+<style scoped>
+.spinner-6 {
+  width: 6rem;
+  height: 6rem;
+}
+
+.overlay-spinner {
+  position: absolute;
+  top: calc(50% - 3rem);
+  left: calc(50% - 3rem);
 }
 </style>

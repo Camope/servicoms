@@ -8,16 +8,15 @@ import About from '@/components/About.vue'
 import NotFound from '@/components/NotFound.vue'
 import ListadoComisiones from '@/components/ListadoComisiones.vue'
 import DetalleComision from '@/components/DetalleComision.vue'
-import ListadoComisionesNuevo from '../components/ListadoComisionesNuevo.vue'
-import DetalleComisionNuevo from '../components/DetalleComisionNuevo.vue'
+import ListadoUsuarios from '@/components/ListadoUsuarios.vue'
 
 // Importación de componentes de PrimeVue
 import PrimeVue from 'primevue/config'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
-import Column from 'primevue/column'
-import Tag from 'primevue/tag'
-import DataTable from 'primevue/datatable'
+// import Column from 'primevue/column'
+// import Tag from 'primevue/tag'
+//import DataTable from 'primevue/datatable'
 import Textarea from 'primevue/textarea'
 import Dropdown from 'primevue/dropdown'
 import InputNumber from 'primevue/inputnumber'
@@ -38,9 +37,9 @@ import * as bootstrap from '~bootstrap'
 
 import 'bootstrap-icons/font/bootstrap-icons.css'
 
-import 'primevue/resources/themes/saga-blue/theme.css'  //theme
-import 'primevue/resources/primevue.min.css'            //core css
-import 'primeicons/primeicons.css'                      //icons
+import 'primevue/resources/themes/saga-blue/theme.css'
+import 'primevue/resources/primevue.min.css'
+import 'primeicons/primeicons.css'
 import 'primeflex/primeflex.css'
 
 
@@ -49,14 +48,13 @@ const pinia = createPinia()
 
 // Define Routes
 const routes = [
-    // Eliminar redirección cuando esté desarrollada el home
-    { path: '/', redirect: { name: 'comisiones' } },  //name: 'home', component: About },
+    
+    { path: '/', redirect: { name: 'comisiones' } },
     { path: '/about', name: 'about', component: About },
-    { path: '/miscomisiones', name: 'miscomisiones', component: ListadoComisionesNuevo, props: { filtrar: true } },
+    { path: '/miscomisiones', name: 'miscomisiones', component: ListadoComisiones, props: { filtrar: true } },
     { path: '/comisiones', name: 'comisiones', component: ListadoComisiones },
-    { path: '/comisionesnuevo', name: 'comisionesnuevo', component: ListadoComisionesNuevo },
-    { path: '/comision/:comisionId', name: 'comision', component: DetalleComision, props: true },
-    { path: '/comisionnuevo/:comisionId', name: 'comisionnuevo', component: DetalleComisionNuevo, props: true },
+    { path: '/detallecomision', name: 'detallecomision', component: DetalleComision },
+    { path: '/usuarios', name: 'usuarios', component: ListadoUsuarios },
     { path: '/:pathMatch(.*)*', name: 'notFound', component: NotFound },
 ]
 
@@ -70,7 +68,7 @@ const app = createApp(App)
 watch(
     pinia.state,
     (state) => {
-        localStorage.setItem("usuarioLogueado", JSON.stringify(state.usuariosnuevo.usuarioLogueado))
+        localStorage.setItem("usuarioLogueado", JSON.stringify(state.usuarios.usuarioLogueado))
     },
     { deep: true }
 );
@@ -88,9 +86,9 @@ app.use(PrimeVue, {
 // Se añaden los componentes de PrimeVue utilizados en la aplicación
 app.component('Button', Button);
 app.component('InputText', InputText)
-app.component('Column', Column)
-app.component('Tag', Tag)
-app.component('DataTable', DataTable)
+// app.component('Column', Column)
+// app.component('Tag', Tag)
+//app.component('DataTable', DataTable)
 app.component('Textarea', Textarea)
 app.component('Dropdown', Dropdown)
 app.component('InputNumber', InputNumber)
