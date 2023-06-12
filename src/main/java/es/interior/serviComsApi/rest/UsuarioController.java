@@ -115,14 +115,22 @@ public class UsuarioController {
 	}
 
 	@PatchMapping("{id}/password")
-	public void passChange(@PathVariable Long id, @RequestBody String password) {
+	public void passChange(@PathVariable Long id, @RequestBody UsuarioPostModel model) {
 
 		UsuarioApi usuarioActualizado = repositorio.findById(id).map(u -> {
-			u.setPassword(password);
+			u.setPassword(model.getPassword());
 			return repositorio.save(u);
 		}).orElseThrow(() -> new RegisterNotFoundException(id, "usuario"));
 		
 		log.info("Cambiada la contraseña del usuario " + usuarioActualizado);
+	}
+	
+	@PostMapping("login")
+	public UsuarioModel login(@RequestBody UsuarioPostModel model) {
+
+		UsuarioApi usuario = repositorio.findByTip(model.getTip()).orElseThrow(() -> new RegisterNotFoundException(model.getTip(), "tip"));
+		log.info("Recuperado " + usuario);
+		return assembler.toModel(usuario);
 	}
 
 }

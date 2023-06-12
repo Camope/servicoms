@@ -3,6 +3,7 @@
 import { mapActions, mapState } from 'pinia'
 import { useUsuariosStore } from '@/stores/usuarios'
 import { useComisionesStore } from '@/stores/comisiones'
+import { useSolicitudesStore } from '@/stores/solicitudes'
 import FormularioComision from '@/components/FormularioComision.vue'
 import ListadoSolicitantes from '@/components/ListadoSolicitantes.vue'
 import DialogoError from '@/components/DialogoError.vue'
@@ -13,26 +14,22 @@ export default {
   emits: [],
   data() {
     return {
-      // confirmacionAnulacion: false,
       preguntaConfirmacion: false,
-      // confirmacionSolicitud: false,
       mostrarFormulario: false,
       confirmacionPendiente: false,
     }
   },
   created() {
-    // this.getComisionPorId(this.comisionId)
-    // if (this.isLoggedIn && !this.isAdmin) {
-    //   this.getSolicitudesPorUsuario()
-    // }
-   // console.log(this.comisionSeleccionada)
+    if (!this.comisionSeleccionada) {
+      this.$router.push({ name: "comisiones" })
+    }
   },
   mounted() {
-
   },
   computed: {
     ...mapState(useUsuariosStore, ['usuarioLogueado', 'isLoggedIn', 'isAdmin', 'isNotAdmin']),
-    ...mapState(useComisionesStore, ['comisionSeleccionada', 'loading', 'errored']),
+    ...mapState(useComisionesStore, ['comisionSeleccionada', 'loadingComisionesStore', 'erroredComisionesStore']),
+    ...mapState(useSolicitudesStore, ['comisionLoading', 'comisionErrored']),
     fechaLimite() {
       let options = { year: 'numeric', month: 'long', day: 'numeric' }
       return this.comisionSeleccionada.fechaLimite ? this.comisionSeleccionada.fechaLimite.toLocaleDateString('es-ES', options) : ''
@@ -41,22 +38,22 @@ export default {
       return !this.isAdmin && this.isApplicant(this.comisionSeleccionada._links.self.href)
     },
     muestraSolicitar() {
-      return this.isNotAdmin && !this.isApplicant(this.comisionSeleccionada._links.self.href) && !this.loading
+      return this.isNotAdmin && !this.isApplicant(this.comisionSeleccionada._links.self.href) && !this.loadingComisionesStore
     },
     muestraEditar() {
-      return this.isAdmin && !this.loading
+      return this.isAdmin && !this.loadingComisionesStore
     },
     muestraAnular() {
-      return (this.isAdmin || this.esSolicitante) && !this.loading
+      return (this.isAdmin || this.esSolicitante) && !this.loadingComisionesStore
     },
     muestraListado() {
-      return this.isAdmin && !this.loading && this.comisionSeleccionada
+      return this.isAdmin && !this.loadingComisionesStore && this.comisionSeleccionada
     },
     mensajeEstado() {
       return this.esSolicitante ? '(Estado: solicitada)' : ''
     },
     mensajeConfirmacion() {
-      return this.confirmacionPendiente && !this.loading
+      return this.confirmacionPendiente && !this.loadingComisionesStore
     },
     tipoComision() {
       let mensaje
@@ -73,13 +70,13 @@ export default {
     }
   },
   methods: {
-    ...mapActions(useUsuariosStore, ['getSolicitudesPorUsuario', 'isApplicant', 'postSolicitud', 'removeSolicitud', 'getSolicitud']),
-    ...mapActions(useComisionesStore, ['getComisionPorId', 'editComision', 'removeComision', 'resetEstados']),
+    ...mapActions(useSolicitudesStore, ['postSolicitud', 'removeSolicitud', 'isApplicant', 'getSolicitud']),
+    ...mapActions(useComisionesStore, ['seleccionaComision', 'editComision', 'removeComision', 'resetEstadoComisionesStore']),
     volver() {
       this.$router.go(-1)
     },
     solicitar() {
-      this.postSolicitud(this.comisionSeleccionada)
+      this.postSolicitud(this.comisionSeleccionada, this.usuarioLogueado)
     },
     editar() {
       this.mostrarFormulario = true
@@ -115,7 +112,7 @@ export default {
     },
     gestionarErrores(event) {
       if (!event) {
-        this.resetEstados()
+        this.resetEstadoComisionesStore()
         this.volver()
       }
     },
@@ -129,28 +126,34 @@ export default {
 
       <Panel header="Datos de la comisión">
 
-        <ProgressSpinner v-if="loading" class="spinner-6 overlay-spinner" />
-        <div class="field col-12 encabezado">{{ comisionSeleccionada.puesto }} {{ mensajeEstado }}</div>
-        <Divider />
-        <ul>
-          <li><span class="negrita">Empleo:</span><span class="ml-2">{{ comisionSeleccionada.empleo }}</span></li>
-          <li><span class="negrita">Especialidad:</span><span class="ml-2">{{ comisionSeleccionada.especialidad }}</span></li>
-          <li><span class="negrita">Localidad:</span><span class="ml-2">{{ comisionSeleccionada.localidad }}</span></li>
-          <li>
-            <span class="negrita">Duración:</span>
-            <span class="ml-2">{{ comisionSeleccionada.duracion }} {{ comisionSeleccionada.duracion > 1 ? "meses" : "mes" }}</span>
-          </li>
-          <li><span class="negrita">Fecha límite solicitud:</span><span class="ml-2">{{ fechaLimite }}</span></li>
-          <li><span class="negrita">Tipo:</span><span class="ml-2">{{ tipoComision }}</span></li>
-          <li>
-            <span class="negrita">Descripción:</span>
-            <pre class="p-component ml-3 mt-2">{{ comisionSeleccionada.detalles ? comisionSeleccionada.detalles : "" }}</pre>
-          </li>
-        </ul>
-
+        <ProgressSpinner v-if="loadingComisionesStore" class="spinner-6 overlay-spinner" />
+        <div v-if="comisionSeleccionada">
+          <div class="field col-12 encabezado">{{ comisionSeleccionada.puesto }} {{ mensajeEstado }}</div>
+          <Divider />
+          <ul>
+            <li><span class="negrita">Empleo:</span><span class="ml-2">{{ comisionSeleccionada.empleo }}</span></li>
+            <li>
+              <span class="negrita">Especialidad:</span><span class="ml-2">{{ comisionSeleccionada.especialidad }}</span>
+            </li>
+            <li><span class="negrita">Localidad:</span><span class="ml-2">{{ comisionSeleccionada.localidad }}</span></li>
+            <li>
+              <span class="negrita">Duración:</span>
+              <span class="ml-2">{{ comisionSeleccionada.duracion }} {{ comisionSeleccionada.duracion > 1 ? "meses" :
+                "mes" }}</span>
+            </li>
+            <li><span class="negrita">Fecha límite solicitud:</span><span class="ml-2">{{ fechaLimite }}</span></li>
+            <li><span class="negrita">Tipo:</span><span class="ml-2">{{ tipoComision }}</span></li>
+            <li>
+              <span class="negrita">Descripción:</span>
+              <pre
+                class="p-component ml-3 mt-2">{{ comisionSeleccionada.detalles ? comisionSeleccionada.detalles : "" }}</pre>
+            </li>
+          </ul>
+        </div>
         <div class="flex justify-content-around">
           <Button label="Volver" icon="pi pi-arrow-left" severity="secondary" text @click="volver" />
-          <Button v-if="muestraSolicitar" label="Solicitar" icon="pi pi-check" severity="success" text @click="solicitar" />
+          <Button v-if="muestraSolicitar" label="Solicitar" icon="pi pi-check" severity="success" text
+            @click="solicitar" />
           <Button v-if="muestraEditar" label="Editar" icon="pi pi-pencil" severity="success" text @click="editar" />
           <Button v-if="muestraAnular" label="Anular" icon="pi pi-times" severity="danger" text @click="anular" />
         </div>
@@ -159,7 +162,7 @@ export default {
       <ListadoSolicitantes v-if="muestraListado" :comision="comisionSeleccionada" />
     </div>
 
-    <Dialog v-model:visible="preguntaConfirmacion" class="dialog-450" header="Confirmación" :modal="true">
+    <Dialog v-model:visible="preguntaConfirmacion" :style="{ width: '450px', margin: '0.75rem' }" header="Confirmación" :modal="true">
       <div>
         <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
         <span>¿Seguro que quiere anular la {{ isAdmin ? "comisión" : "solicitud" }}?</span>
@@ -170,14 +173,14 @@ export default {
       </template>
     </Dialog>
 
-    <Dialog :visible="mensajeConfirmacion" class="dialog-450" header="Información" :modal="true"
+    <Dialog :visible="mensajeConfirmacion" :style="{ width: '450px', margin: '0.75rem' }" header="Información" :modal="true"
       @update:visible="cerrarMensajeConfirmacion">
       <div>
-        <span style="color: red;">¡Su solicitud ha sido realizada!</span>
+        <span class="texto-rojo">¡Su solicitud ha sido realizada!</span>
       </div>
     </Dialog>
 
-    <DialogoError :visible="errored" @update:visible="gestionarErrores" />
+    <DialogoError :visible="erroredComisionesStore" @update:visible="gestionarErrores" />
 
     <FormularioComision v-if="mostrarFormulario" :comision="comisionSeleccionada" @cancelar="cerrarFormulario"
       @guardar="guardarCambios" />
@@ -199,10 +202,6 @@ export default {
   font-weight: 600;
 }
 
-.dialog-450 {
-  width: '450px';
-}
-
 .spinner-6 {
   width: 6rem;
   height: 6rem;
@@ -212,4 +211,9 @@ export default {
   position: absolute;
   top: calc(50% - 3rem);
   left: calc(50% - 3rem);
-}</style>
+}
+
+.texto-rojo {
+  color: red;
+}
+</style>

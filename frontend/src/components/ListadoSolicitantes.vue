@@ -1,6 +1,6 @@
 <script>
 import { mapActions, mapState } from 'pinia'
-import { useUsuariosStore } from '@/stores/usuarios'
+import { useSolicitudesStore } from '@/stores/solicitudes'
 import EncabezadoLista from './listado/EncabezadoLista.vue'
 import ElementoLista from './listado/ElementoLista.vue'
 
@@ -26,16 +26,15 @@ export default {
     this.getSolicitantesPorComision(this.comision)
   },
   mounted() {
-    console.log("link: " + this.comision._links.self.href)
   },
   computed: {
-    ...mapState(useUsuariosStore, ['listaDeSolicitantes', 'userLoading', 'userErrored']),
+    ...mapState(useSolicitudesStore, ['listaDeSolicitantes', 'loadingSolicitudesStore']),
     haySolicitantes() {
       return this.listaDeSolicitantes.length > 0
     },
   },
   methods: {
-    ...mapActions(useUsuariosStore, ['getSolicitantesPorComision']),
+    ...mapActions(useSolicitudesStore, ['getSolicitantesPorComision']),
   }
 }
 </script>
@@ -46,14 +45,15 @@ export default {
     <div class="p-panel-header encabezado justify-content-center">
       <span>Lista de solicitantes</span>
     </div>
-    <div v-if="userLoading" class="text-center">
+    <div v-if="loadingSolicitudesStore" class="text-center">
       <ProgressSpinner />
     </div>
     <div v-else>
       <div v-if="!haySolicitantes" class="encabezado">¡No hay solicitantes para esta comisión!</div>
       <div v-else>
         <EncabezadoLista :titles="configList" :showIcon="false" :sortable="false" />
-        <ElementoLista v-for="solicitante in listaDeSolicitantes" :titles="configList" :element="solicitante" :hoverable="false"/>
+        <ElementoLista v-for="solicitante in listaDeSolicitantes" :titles="configList" :element="solicitante"
+          :hoverable="false" />
       </div>
     </div>
   </div>

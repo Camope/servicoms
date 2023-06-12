@@ -48,7 +48,6 @@ export default {
 
       if (this.sortRule.rule) {
         this.sortData()
-        console.log('sort')
       }
 
       if (this.paginable) {

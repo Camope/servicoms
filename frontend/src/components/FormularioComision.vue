@@ -71,7 +71,7 @@ export default {
     },
     guardar() {
       this.enviar = true;
-      // Validación del formulario
+
       if (this.comisionTemp.localidad &&
         this.comisionTemp.empleo &&
         this.comisionTemp.especialidad &&

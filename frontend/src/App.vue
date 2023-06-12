@@ -1,7 +1,7 @@
 <script setup>
 
 import BarraNavegacion from '@/components/BarraNavegacion.vue'
-import PiePagina from './components/PiePagina.vue';
+import PiePagina from '@/components/PiePagina.vue'
 
 </script>
 

@@ -28,9 +28,9 @@ export default {
 </script>
 
 <template>
-   <Dialog :visible="visible" :style="{ width: '450px' }" header="Información" :modal="true" @update:visible="update" >
+   <Dialog :visible="visible" :style="{ width: '450px', margin: '0.75rem' }" header="Información" :modal="true" @update:visible="update" >
       <div>
-        <span style="color: red;">¡Error de comunicación!</span>
+        <span class="texto-rojo">¡Error de comunicación!</span>
       </div>
       <div>
         <span>En este momento no es posible contactar con el servidor, inténtelo pasado unos minutos.</span>
@@ -39,4 +39,8 @@ export default {
 </template>
 
 <style scoped>
+
+.texto-rojo {
+  color: red;
+}
 </style>

@@ -1,5 +1,5 @@
 <script>
-import { ConstantesComision } from '@/js/ConstantesComision';
+import { ConstantesComision } from '@/js/ConstantesComision'
 
 export default {
   props: {
@@ -42,8 +42,8 @@ export default {
       this.$emit('cancelar')
     },
     guardar() {
-      this.checkForm = true;
-      // Validación del formulario
+      this.checkForm = true
+
       if (this.usuarioTemp.nombre &&
         this.usuarioTemp.apellidos &&
         this.usuarioTemp.tip &&

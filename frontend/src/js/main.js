@@ -2,21 +2,16 @@ import { createApp, watch } from 'vue'
 import { createRouter, createWebHashHistory } from 'vue-router'
 import { createPinia } from 'pinia'
 
-// Import Components
 import App from '@/App.vue'
-import About from '@/components/About.vue'
 import NotFound from '@/components/NotFound.vue'
 import ListadoComisiones from '@/components/ListadoComisiones.vue'
-import DetalleComision from '@/components/DetalleComision.vue'
-import ListadoUsuarios from '@/components/ListadoUsuarios.vue'
+const About = () => import('@/components/About.vue')
+const DetalleComision = () => import('@/components/DetalleComision.vue')
+const ListadoUsuarios = () => import('@/components/ListadoUsuarios.vue')
 
-// Importación de componentes de PrimeVue
 import PrimeVue from 'primevue/config'
 import Button from 'primevue/button'
 import InputText from 'primevue/inputtext'
-// import Column from 'primevue/column'
-// import Tag from 'primevue/tag'
-//import DataTable from 'primevue/datatable'
 import Textarea from 'primevue/textarea'
 import Dropdown from 'primevue/dropdown'
 import InputNumber from 'primevue/inputnumber'
@@ -29,10 +24,8 @@ import ProgressSpinner from 'primevue/progressspinner'
 import Paginator from 'primevue/paginator'
 import Menu from 'primevue/menu'
 
-// Import our custom CSS
 import '@/scss/styles.scss'
 
-// Import all of Bootstrap's JS
 import * as bootstrap from '~bootstrap'
 
 import 'bootstrap-icons/font/bootstrap-icons.css'
@@ -43,10 +36,8 @@ import 'primeicons/primeicons.css'
 import 'primeflex/primeflex.css'
 
 
-// Definimos instancia de Pinia
 const pinia = createPinia()
 
-// Define Routes
 const routes = [
     
     { path: '/', redirect: { name: 'comisiones' } },
@@ -60,7 +51,7 @@ const routes = [
 
 const router = createRouter({
     history: createWebHashHistory(),
-    routes // short for `routes: routes`
+    routes
 })
 
 const app = createApp(App)
@@ -68,10 +59,10 @@ const app = createApp(App)
 watch(
     pinia.state,
     (state) => {
-        localStorage.setItem("usuarioLogueado", JSON.stringify(state.usuarios.usuarioLogueado))
+        localStorage.setItem('usuarioLogueado', JSON.stringify(state.usuarios.usuarioLogueado))
     },
     { deep: true }
-);
+)
 
 app.use(pinia)
 app.use(router)
@@ -81,14 +72,11 @@ app.use(PrimeVue, {
         dayNamesMin: ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'],
         monthNames: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
     }
-});
+})
 
-// Se añaden los componentes de PrimeVue utilizados en la aplicación
-app.component('Button', Button);
+
+app.component('Button', Button)
 app.component('InputText', InputText)
-// app.component('Column', Column)
-// app.component('Tag', Tag)
-//app.component('DataTable', DataTable)
 app.component('Textarea', Textarea)
 app.component('Dropdown', Dropdown)
 app.component('InputNumber', InputNumber)
@@ -99,6 +87,5 @@ app.component('Panel', Panel)
 app.component('Divider', Divider)
 app.component('ProgressSpinner', ProgressSpinner)
 app.component('Paginator', Paginator)
-// app.component('Menu', Menu)
 
 app.mount('#app')

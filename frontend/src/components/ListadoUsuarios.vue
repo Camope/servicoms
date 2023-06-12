@@ -34,7 +34,7 @@ export default {
   mounted() {
   },
   computed: {
-    ...mapState(useUsuariosStore, ['isAdmin', 'userLoading', 'userErrored', 'listaUsuarios', 'usuarioSeleccionado']),
+    ...mapState(useUsuariosStore, ['isAdmin', 'loadingUsuariosStore', 'erroredUsuariosStore', 'listaUsuarios', 'usuarioSeleccionado']),
     mostrarLista() {
       return (this.listaUsuarios.length > 0)
     },
@@ -59,7 +59,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(useUsuariosStore, ['getUsuarios', 'resetUserEstados', 'seleccionaUsuario', 'saveUsuario', 'editaUsuario', 'changePassword', 'removeUser']),
+    ...mapActions(useUsuariosStore, ['getUsuarios', 'resetEstadoUsuariosStore', 'seleccionaUsuario', 'saveUsuario', 'editaUsuario', 'changePassword', 'removeUser']),
     nuevoUsuario() {
       this.nuevo = true
       this.mostrarFormulario = true
@@ -79,8 +79,6 @@ export default {
       } else {
         this.editaUsuario(usuario)
         if (usuario.password) {
-          console.log('cambia password')
-          console.log(usuario.password)
           this.changePassword(usuario)
         }
       }
@@ -93,7 +91,7 @@ export default {
       this.palabraBuscada = palabra
     },
     gestionarErrores(visible) {
-      if (!visible) this.resetUserEstados()
+      if (!visible) this.resetEstadoUsuariosStore()
     },
   }
 }
@@ -103,7 +101,7 @@ export default {
   <div>
     <PanelTitulado title="Lista de Usuarios" :show-button="isAdmin" button-label="Nuevo" @click="nuevoUsuario"
       @search="buscar">
-      <ProgressSpinner v-if="userLoading" :class="['spinner-6', { 'overlay-spinner': mostrarLista }]" />
+      <ProgressSpinner v-if="loadingUsuariosStore" :class="['spinner-6', { 'overlay-spinner': mostrarLista }]" />
       <Lista v-if="mostrarLista" :elements="listaUsuariosParaMostrar" :titles="configList" @row-click="editarUsuario" />
     </PanelTitulado>
 
@@ -111,7 +109,7 @@ export default {
       @cancelar="cerrarFormulario" @guardar="guardarUsuario" @borrar="borrarUsuario"/>
 
     <!-- Diálogo de Error -->
-    <DialogoError :visible="userErrored" @update:visible="gestionarErrores" />
+    <DialogoError :visible="erroredUsuariosStore" @update:visible="gestionarErrores" />
 
   </div>
 </template>

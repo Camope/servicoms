@@ -3,9 +3,10 @@
 import { mapActions, mapState } from 'pinia'
 import { useComisionesStore } from '@/stores/comisiones'
 import { useUsuariosStore } from '@/stores/usuarios'
+import { useSolicitudesStore } from '@/stores/solicitudes'
 import FormularioComision from '@/components/FormularioComision.vue'
-import Lista from '@/components/listado/Lista.vue';
-import DialogoError from '@/components/DialogoError.vue';
+import Lista from '@/components/listado/Lista.vue'
+import DialogoError from '@/components/DialogoError.vue'
 import PanelTitulado from '@/components/PanelTitulado.vue'
 
 export default {
@@ -34,21 +35,30 @@ export default {
   updated() {
   },
   created() {
-    this.updateListaComisiones(this.filtrar ? this.usuarioLogueado : null)
+    this.getComisiones()
+    if(this.filtrar){ 
+      this.getSolicitudesPorUsuario(this.usuarioLogueado._links.self.href)
+    }
   },
   mounted() {
   },
   computed: {
     ...mapState(useUsuariosStore, ['usuarioLogueado', 'isLoggedIn', 'isAdmin']),
-    ...mapState(useComisionesStore, ['listaComisiones', 'loading', 'errored']),
+    ...mapState(useComisionesStore, ['listaComisiones', 'loadingComisionesStore', 'erroredComisionesStore']),
     mostrarLista() {
       return (this.listaComisiones.length > 0)
     },
     listaComisionesParaMostrar() {
       let listaComisionesFiltrada = this.listaComisiones
 
+      if (this.filtrar) {
+        listaComisionesFiltrada = listaComisionesFiltrada.filter(c => {
+          return this.isApplicant(c._links.self.href)
+        })
+      }
+
       if (this.palabraBuscada != '') {
-        listaComisionesFiltrada = this.listaComisiones.filter(c => {
+        listaComisionesFiltrada = this.listaComisionesFiltrada.filter(c => {
           for (const campo of this.camposDeBusqueda) {
             if (typeof c[campo] === 'string' || c[campo] instanceof String) {
               if (c[campo].toLowerCase().includes(this.palabraBuscada.toLowerCase())) {
@@ -64,9 +74,8 @@ export default {
     }
   },
   methods: {
-    ...mapActions(useComisionesStore, ['updateListaComisiones', 'sortListaComisiones',
-      'searchInListaComisiones', 'saveComision',
-      'resetEstados', 'seleccionaComision', 'getComisionId']),
+    ...mapActions(useComisionesStore, [ 'getComisiones', 'saveComision', 'resetEstadoComisionesStore', 'seleccionaComision' ]),
+    ...mapActions(useSolicitudesStore, [ 'getSolicitudesPorUsuario', 'isApplicant' ]),
     nuevaComision() {
       this.mostrarFormulario = true
     },
@@ -74,13 +83,11 @@ export default {
       this.mostrarFormulario = false
     },
     guardarComision(data) {
-      console.log("guardar...")
-      console.log(data)
       this.saveComision(data)
       this.cerrarFormulario()
     },
     seleccionarComision(comision) {
-      if (!this.loading) {
+      if (!this.loadingComisionesStore) {
         this.seleccionaComision(comision._links.self.href)
         this.$router.push({ name: 'detallecomision' })
       }
@@ -89,7 +96,7 @@ export default {
       this.palabraBuscada = palabra
     },
     gestionarErrores(event) {
-      if (!event) this.resetEstados()
+      if (!event) this.resetEstadoComisionesStore()
     }
   }
 }
@@ -100,7 +107,7 @@ export default {
 
     <PanelTitulado :title="filtrar ? 'Mis Solicitudes' : 'Comisiones Publicadas'" :show-button="isAdmin"
       button-label="Nueva" @click="nuevaComision" @search="buscar">
-      <ProgressSpinner v-if="loading" :class="['spinner-6', { 'overlay-spinner': mostrarLista }]" />
+      <ProgressSpinner v-if="loadingComisionesStore" :class="['spinner-6', { 'overlay-spinner': mostrarLista }]" />
       <Lista v-if="mostrarLista" :elements="listaComisionesParaMostrar" :titles="configList"
         @row-click="seleccionarComision" />
     </PanelTitulado>
@@ -110,7 +117,7 @@ export default {
       @guardar="guardarComision" />
 
     <!-- Diálogo de Error -->
-    <DialogoError :visible="errored" @update:visible="gestionarErrores" />
+    <DialogoError :visible="erroredComisionesStore" @update:visible="gestionarErrores" />
 
   </div>
 </template>

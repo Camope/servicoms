@@ -1,10 +1,6 @@
 import axios from 'axios'
 
 const host = 'http://localhost:8080/api'
-const URL_COMISION_ID_PATTERN = /\/comisiones\/[0-9]+\/*$/
-const URL_USUARIO_ID_PATTERN = /\/usuarios\/[0-9]+\/*$/
-const URL_SOLICITUD_ID_PATTERN = /\/solicitudes\/[0-9]+\/*$/
-
 
 function apiRequest(path, method, body) {
   let config = {
@@ -22,56 +18,57 @@ function apiRequest(path, method, body) {
   return axios.request(config)
 }
 
-export async function getUrlApi(url) {
-  await resolveAfterXSeconds(2000)
-  return apiRequest(url, 'get')
-}
 
-export async function putUrlApi(url, body) {
-  await resolveAfterXSeconds(2000)
-  return apiRequest(url, 'put', body)
-}
-
-export async function deleteUrlApi(url) {
-  await resolveAfterXSeconds(2000)
-  return apiRequest(url, 'delete')
-}
-
-export async function getUsuariosApi() {
+export async function getUsersApi() {
   await resolveAfterXSeconds(2000)
   return apiRequest(`${host}/usuarios`, 'get')
 }
 
-export async function getUsuarioPorIdApi(usuarioId) {
+export async function getUserByLinkApi(userLink) {
+  await resolveAfterXSeconds(2000)
+  return apiRequest(`${userLink}`, 'get')
+}
+
+export async function loginUserApi(usuarioId) {
   await resolveAfterXSeconds(2000)
   return apiRequest(`${host}/usuarios/${usuarioId}`, 'get')
 }
 
-export async function postUsuarioApi(usuario) {
+export async function postUserApi(user) {
   await resolveAfterXSeconds(2000)
-  return apiRequest(`${host}/usuarios`, 'post', usuario)
+  return apiRequest(`${host}/usuarios`, 'post', user)
 }
 
-export async function patchUsuarioPasswordApi(userLink, password) {
+export async function putUserApi(userLink, body) {
   await resolveAfterXSeconds(2000)
-  return apiRequest(`${userLink}/password`, 'patch', password)
+  return apiRequest(userLink, 'put', body)
 }
 
-export async function getSolicitudesPorUsuarioApi(userLink) {
+export async function patchUserPasswordApi(userLink, password) {
   await resolveAfterXSeconds(2000)
-  return apiRequest(`${userLink}/solicitudes`, 'get')
+  return apiRequest(`${userLink}/password`, 'patch', { password })
 }
 
-export async function getComisionesPorUsuarioApi(usuarioId) {
+export async function deleteUserApi(userLink) {
   await resolveAfterXSeconds(2000)
-  return apiRequest(`${host}/usuarios/${usuarioId}/comisiones`, 'get')
+  return apiRequest(userLink, 'delete')
 }
 
-// Endpoints de Comisiones
+
 
 export async function getComisionesApi() {
   await resolveAfterXSeconds(2000)
   return apiRequest(`${host}/comisiones`, 'get')
+}
+
+export async function getVacancyApi(vacancyLink) {
+  await resolveAfterXSeconds(2000)
+  return apiRequest(vacancyLink, 'get')
+}
+
+export async function getVacanciesByUserApi(userLink) {
+  await resolveAfterXSeconds(2000)
+  return apiRequest(`${userLink}/comisiones`, 'get')
 }
 
 export async function postComisionesApi(comision) {
@@ -79,67 +76,43 @@ export async function postComisionesApi(comision) {
   return apiRequest(`${host}/comisiones`, 'post', comision)
 }
 
-export async function getComisionesPorIdApi(id) {
+export async function deleteVacancyApi(vacancyLink) {
   await resolveAfterXSeconds(2000)
-  return apiRequest(`${host}/comisiones/${id}`, 'get')
+  return apiRequest(vacancyLink, 'delete')
 }
 
-export async function putComisionApi(comision, id) {
+export async function putVacancyApi(vacancyLink, body) {
   await resolveAfterXSeconds(2000)
-  return apiRequest(`${host}/comisiones/${id}`, 'put', comision)
+  return apiRequest(vacancyLink, 'put', body)
 }
 
-export async function deleteComisionApi(id) {
+
+
+export async function getApplicantsByVacancyApi(VacancyLink) {
   await resolveAfterXSeconds(2000)
-  return apiRequest(`${host}/comisiones/${id}`, 'delete')
+  return apiRequest(`${VacancyLink}/usuarios`, 'get')
 }
 
-export async function getSolicitantesPorComisionApi(comisionLink) {
+export async function getApplicationsByUserApi(userLink) {
   await resolveAfterXSeconds(2000)
-  return apiRequest(`${comisionLink}/usuarios`, 'get')
+  return apiRequest(`${userLink}/solicitudes`, 'get')
 }
 
-export async function postSolicitudApi(comision, usuario) {
+export async function postApplicationApi(body) {
   await resolveAfterXSeconds(2000)
-  return apiRequest(`${host}/solicitudes`, 'post', {comision, usuario})
+  return apiRequest(`${host}/solicitudes`, 'post', body)
 }
 
-export async function deleteSolicitudApi(id) {
+export async function deleteApplicationApi(ApplicationLink) {
   await resolveAfterXSeconds(2000)
-  return apiRequest(`${host}/solicitudes/${id}`, 'delete')
-}
-
-
-export function getComisionIdApi(url) {
-  return getIdApi(url, URL_COMISION_ID_PATTERN)
-}
-
-export function getUsuarioIdApi(url) {
-  return getIdApi(url, URL_USUARIO_ID_PATTERN)
-}
-
-export function getSolicitudIdApi(url) {
-  return getIdApi(url, URL_SOLICITUD_ID_PATTERN)
-}
-
-export function getIdApi(url, pattern) {
-  const ID_PATTERN = /[0-9]+/
-
-  let id = url.match(pattern);
-  return id.length == 1 ? id[0].match(ID_PATTERN)[0] : null
+  return apiRequest(ApplicationLink, 'delete')
 }
 
 function resolveAfterXSeconds(x) {
   return new Promise(resolve => {
     setTimeout(() => {
-      resolve();
-    }, x);
+      resolve()
+    }, x)
   });
 }
-// axios.request(config)
-// .then((response) => {
-//   console.log(JSON.stringify(response.data));
-// })
-// .catch((error) => {
-//   console.log(error);
-// });
+

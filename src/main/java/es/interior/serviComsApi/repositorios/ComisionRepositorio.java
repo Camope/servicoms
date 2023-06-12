@@ -4,10 +4,12 @@ import java.time.OffsetDateTime;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.rest.core.annotation.RepositoryRestResource;
 
 import es.interior.serviComsApi.entidades.ComisionApi;
 import jakarta.transaction.Transactional;
 
+@RepositoryRestResource(path = "comisiones", collectionResourceRel = "comisiones")
 public interface ComisionRepositorio extends JpaRepository<ComisionApi, Long> {
 
 	@Transactional

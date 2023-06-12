@@ -1,35 +1,66 @@
 <script>
 import { mapActions, mapState } from 'pinia'
 import { useUsuariosStore } from '@/stores/usuarios'
+import MenuDesplegable from './MenuDesplegable.vue'
 
 export default {
   props: [],
-  components: {},
+  components: { MenuDesplegable },
   emits: [],
   data() {
     return {
+      logoutMenuTemplate: {
+        header: { icon: 'pi-sign-in', name: 'Login', surname: '' },
+        body: [{ divider: true, icon: 'pi-fw pi-user', text: 'Admin', clickMessage: 'adminLogin' },
+        { divider: false, icon: 'pi-fw pi-users', text: 'User', clickMessage: 'userLogin' }]
+      },
+      loginMenuTemplate: {
+        header: { icon: 'pi-user', name: '', surname: '' },
+        body: [{ divider: true, icon: null, text: '', clickMessage: '' },
+        { divider: false, icon: null, text: 'Lista de Comisiones', clickMessage: 'comisiones' },
+        { divider: true, icon: 'pi-fw pi-sign-out', text: 'Logout', clickMessage: 'logout' },]
+      },
+      menuTemplate: null,
+      muestraMenu: false,
+    }
+  },
+  watch: {
+    isLoggedIn(newLoginState) {
+      if (newLoginState) {
+        this.configuraLoginMenuTemplate()
+        this.menuTemplate = this.loginMenuTemplate
+      } else {
+        this.menuTemplate = this.logoutMenuTemplate
+      }
     }
   },
   created() {
+    if (this.isLoggedIn) {
+      this.configuraLoginMenuTemplate()
+    }
+    this.menuTemplate = this.isLoggedIn ? this.loginMenuTemplate : this.logoutMenuTemplate
   },
   mounted() {
   },
   computed: {
-    ...mapState(useUsuariosStore, [ 'usuarioLogueado', 'isLoggedIn', 'isAdmin' ]),
+    ...mapState(useUsuariosStore, ['usuarioLogueado', 'isLoggedIn', 'isAdmin']),
     nombre() {
       return this.isLoggedIn ? this.usuarioLogueado.nombre : ''
     }
   },
   methods: {
-    ...mapActions(useUsuariosStore, ['LoginUser', 'logoutUser']),
-    // muestraMenuLogout(event) {
-    //   this.$refs.menu.toggle(event);
-    // },
+    ...mapActions(useUsuariosStore, ['loginUser', 'logoutUser']),
+    configuraLoginMenuTemplate() {
+      this.loginMenuTemplate.header.name = this.usuarioLogueado.nombre
+      this.loginMenuTemplate.header.surname = this.isAdmin ? 'Admin' : 'Usuario'
+      this.loginMenuTemplate.body[0].text = this.isAdmin ? 'Gestión Usuarios' : 'Mis Comisiones'
+      this.loginMenuTemplate.body[0].clickMessage = this.isAdmin ? 'usuarios' : 'misComisiones'
+    },
     login(role) {
-      if (role == "admin") {
-        this.LoginUser(1) // El usuario 1 es es administrador en los datos de prueba
+      if (role == 'admin') {
+        this.loginUser(1) // El usuario 1 es administrador en los datos de prueba
       } else {
-        this.LoginUser(29) //this.userLogin(Math.floor(Math.random() * 3) + 1) // Selecciona cualquier usuario (1-3) no admin aleatoriamente
+        this.loginUser(Math.floor(Math.random() * 4) + 3 ) // Los usuarios 3 al 6 son normales en los datos de prueba
       }
       this.goHome()
     },
@@ -38,16 +69,32 @@ export default {
       this.goHome()
     },
     goHome() {
-      this.$router.push({ name: "comisiones" })
+      this.$router.push({ name: 'comisiones' })
     },
     misComisiones() {
-      this.$router.push({ name: "miscomisiones" })
-
+      this.$router.push({ name: 'miscomisiones' })
     },
     gestionUsuarios() {
-      this.$router.push({ name: "usuarios" })
+      this.$router.push({ name: 'usuarios' })
+    },
+    seleccionarOpcion(opcion) {
+      this.muestraMenu = false
+      if (opcion == 'adminLogin') {
+        this.login('admin')
+      } else if (opcion == 'userLogin') {
+        this.login('user')
+      } else if (opcion == 'logout') {
+        this.logout()
+      } else if (opcion == 'comisiones') {
+        this.goHome()
+      } else if (opcion == 'miscomisiones') {
+        this.misComisiones()
+      } else if (opcion == 'usuarios') {
+        this.gestionUsuarios()
+      }
 
     }
+
   }
 }
 </script>
@@ -57,106 +104,25 @@ export default {
     <div class="p-menubar flex align-items-center justify-content-between">
       <div class="logo">
         <router-link :to="{ name: 'comisiones' }">
-          <img alt="logo" src="/src/assets/sc.png" class="mr-2" height="40">
+          <img alt="logo" src="/src/assets/sc.png" class="mr-2 imagen-logo" >
         </router-link>
         <span class="texto-logo">ServiComs</span>
       </div>
 
-      <div class="">
-        <a class="" href="#" role="button" data-bs-toggle="dropdown">
+      <div @click="muestraMenu = !muestraMenu">
           <Button v-if="!isLoggedIn" label="Inicia Sesión" severity="info" size="small" />
           <Button v-else icon="pi pi-user" severity="warning" rounded />
-        </a>
-
-        <div class="dropdown-menu dropdown-menu-end p-menu-overlay p-menu p-component">
-          <!-- Contenido que se mostrará cuando no hay usuario logueado -->
-          <ul v-if="!isLoggedIn">
-            <li class="p-submenu-header flex" role="none">
-              <div class="">
-                <i class="pi pi-sign-in mr-3" style="font-size: 1.5rem" />
-              </div>
-              <div class="flex flex-column justify-content-center">
-                <span class="font-bold">Login</span>
-              </div>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li class="p-menuitem" @click="login('admin')">
-              <div class="p-menuitem-content">
-                <a class="p-menuitem-link" tabindex="-1">
-                  <span class="p-menuitem-icon pi pi-fw pi-user"></span>
-                  <span class="p-menuitem-text">Admin</span>
-                </a>
-              </div>
-            </li>
-            <li class="p-menuitem" @click="login('notAdmin')">
-              <div class="p-menuitem-content">
-                <a class="p-menuitem-link" tabindex="-1">
-                  <span class="p-menuitem-icon pi pi-fw pi-users"></span>
-                  <span class="p-menuitem-text">User</span>
-                </a>
-              </div>
-            </li>
-          </ul>
-          <!-- Contenido que se mostrará cuando un usuario está logueado -->
-          <ul v-if="isLoggedIn">
-            <li class="p-submenu-header flex align-items-center" role="none">
-              <div class="">
-                <i class="pi pi-user mr-3" style="font-size: 1.5rem" />
-              </div>
-              <div class="flex flex-column justify-content-center">
-                <span class="font-bold">{{ nombre }}</span>
-                <span class="text-sm">{{ isAdmin ? "Admin" : "Usuario" }}</span>
-              </div>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li class="p-menuitem" @click="misComisiones">
-              <div class="p-menuitem-content">
-                <a class="p-menuitem-link" tabindex="-1">
-                  <span class="p-menuitem-text">Mis Comisiones</span>
-                </a>
-              </div>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li class="p-menuitem" @click="gestionUsuarios">
-              <div class="p-menuitem-content">
-                <a class="p-menuitem-link" tabindex="-1">
-                  <span class="p-menuitem-text">Gestión Usuarios</span>
-                </a>
-              </div>
-            </li>
-            <li class="p-menuitem" @click="goHome">
-              <div class="p-menuitem-content">
-                <a class="p-menuitem-link" tabindex="-1">
-                  <span class="p-menuitem-text">Lista de comisiones</span>
-                </a>
-              </div>
-            </li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li class="p-menuitem" @click="logout">
-              <div class="p-menuitem-content">
-                <a class="p-menuitem-link" tabindex="-1">
-                  <span class="p-menuitem-icon pi pi-fw pi-sign-out"></span>
-                  <span class="p-menuitem-text">Logout</span>
-                </a>
-              </div>
-            </li>
-          </ul>
-        </div>
       </div>
+
+      <MenuDesplegable :visible="muestraMenu" :menuTemplate="menuTemplate" @selectMenuOption="seleccionarOpcion" />
+
+      
     </div>
   </div>
 </template>
 
 <style scoped>
-/* Fuente importada para el texto que acompaña al logo */
+
 @import url('https://fonts.googleapis.com/css2?family=Michroma&display=swap');
 
 .logo {
@@ -170,5 +136,8 @@ export default {
   font-size: 1.5rem;
 }
 
+.imagen-logo {
+  width: 2.5rem;
+}
 
 </style>

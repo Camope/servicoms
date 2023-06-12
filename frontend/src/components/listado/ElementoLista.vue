@@ -1,6 +1,6 @@
 <script>
 
-import TituloItem from './TituloItem.vue';
+import TituloItem from './TituloItem.vue'
 
 export default {
   props: {
