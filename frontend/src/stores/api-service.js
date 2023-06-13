@@ -1,14 +1,18 @@
 import axios from 'axios'
 
-const host = 'http://localhost:8080/api'
+const host = 'https://servicomsapi-camorpe.b4a.run/api'
+const HTTP_TO_HTTPS_ENABLE = true
 
 function apiRequest(path, method, body) {
   let config = {
     method: method ?? 'get',
     maxBodyLength: Infinity,
     url: path,
+    timeout: 10000,
     headers: {}
   }
+
+  config.url = httpToHttps(path)
 
   if (body) {
     config.data = body,
@@ -18,101 +22,105 @@ function apiRequest(path, method, body) {
   return axios.request(config)
 }
 
-
-export async function getUsersApi() {
-  await resolveAfterXSeconds(2000)
-  return apiRequest(`${host}/usuarios`, 'get')
+function getApi(url) {
+  return apiRequest(url, 'get')
 }
 
-export async function getUserByLinkApi(userLink) {
-  await resolveAfterXSeconds(2000)
-  return apiRequest(`${userLink}`, 'get')
+function postApi(url, body) {
+  return apiRequest(url, 'post', body)
 }
 
-export async function loginUserApi(usuarioId) {
-  await resolveAfterXSeconds(2000)
-  return apiRequest(`${host}/usuarios/${usuarioId}`, 'get')
+function putApi(url, body) {
+  return apiRequest(url, 'put', body)
 }
 
-export async function postUserApi(user) {
-  await resolveAfterXSeconds(2000)
-  return apiRequest(`${host}/usuarios`, 'post', user)
+function deleteApi(url) {
+  return apiRequest(url, 'delete')
 }
 
-export async function putUserApi(userLink, body) {
-  await resolveAfterXSeconds(2000)
-  return apiRequest(userLink, 'put', body)
+function patchApi(url, body) {
+  return apiRequest(url, 'patch', body)
 }
 
-export async function patchUserPasswordApi(userLink, password) {
-  await resolveAfterXSeconds(2000)
-  return apiRequest(`${userLink}/password`, 'patch', { password })
+
+export async function getUsuariosApi() {
+  return getApi(`${host}/usuarios`)
 }
 
-export async function deleteUserApi(userLink) {
-  await resolveAfterXSeconds(2000)
-  return apiRequest(userLink, 'delete')
+export async function getUsuarioPorLinkApi(userLink) {
+  return getApi(userLink)
+}
+
+export async function loginUsuarioApi(usuarioId) {
+  return getApi(`${host}/usuarios/${usuarioId}`)
+}
+
+export async function postUsuarioApi(user) {
+  return postApi(`${host}/usuarios`, user)
+}
+
+export async function putUsuarioApi(userLink, user) {
+  return putApi(userLink, user)
+}
+
+export async function patchUsuarioPasswordApi(userLink, password) {
+  return patchApi(`${userLink}/password`, { password })
+}
+
+export async function deleteUsuarioApi(userLink) {
+  return deleteApi(userLink)
 }
 
 
 
 export async function getComisionesApi() {
-  await resolveAfterXSeconds(2000)
-  return apiRequest(`${host}/comisiones`, 'get')
+  return getApi(`${host}/comisiones`)
 }
 
-export async function getVacancyApi(vacancyLink) {
-  await resolveAfterXSeconds(2000)
-  return apiRequest(vacancyLink, 'get')
+export async function getComisionApi(comisionLink) {
+  return getApi(comisionLink)
 }
 
-export async function getVacanciesByUserApi(userLink) {
-  await resolveAfterXSeconds(2000)
-  return apiRequest(`${userLink}/comisiones`, 'get')
+export async function getComisionesPorUsuarioApi(userLink) {
+  return getApi(`${userLink}/comisiones`)
 }
 
-export async function postComisionesApi(comision) {
-  await resolveAfterXSeconds(2000)
-  return apiRequest(`${host}/comisiones`, 'post', comision)
+export async function postComisionApi(comision) {
+  return postApi(`${host}/comisiones`, comision)
 }
 
-export async function deleteVacancyApi(vacancyLink) {
-  await resolveAfterXSeconds(2000)
-  return apiRequest(vacancyLink, 'delete')
+export async function deleteComisionApi(comisionLink) {
+  return deleteApi(comisionLink)
 }
 
-export async function putVacancyApi(vacancyLink, body) {
-  await resolveAfterXSeconds(2000)
-  return apiRequest(vacancyLink, 'put', body)
+export async function putComisionApi(comisionLink, body) {
+  return putApi(comisionLink, body)
 }
 
 
 
-export async function getApplicantsByVacancyApi(VacancyLink) {
-  await resolveAfterXSeconds(2000)
-  return apiRequest(`${VacancyLink}/usuarios`, 'get')
+export async function getSolicitantesPorComisionApi(comisionLink) {
+  return getApi(`${comisionLink}/usuarios`)
 }
 
-export async function getApplicationsByUserApi(userLink) {
-  await resolveAfterXSeconds(2000)
-  return apiRequest(`${userLink}/solicitudes`, 'get')
+export async function getSolicitudesPorUsuarioApi(userLink) {
+  return getApi(`${userLink}/solicitudes`)
 }
 
-export async function postApplicationApi(body) {
-  await resolveAfterXSeconds(2000)
-  return apiRequest(`${host}/solicitudes`, 'post', body)
+export async function postSolicitudApi(body) {
+  return postApi(`${host}/solicitudes`, body)
 }
 
-export async function deleteApplicationApi(ApplicationLink) {
-  await resolveAfterXSeconds(2000)
-  return apiRequest(ApplicationLink, 'delete')
+export async function deleteSolicitudApi(solicitudLink) {
+  return deleteApi(solicitudLink, 'delete')
 }
 
-function resolveAfterXSeconds(x) {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve()
-    }, x)
-  });
-}
 
+function httpToHttps(link) {
+
+  if(HTTP_TO_HTTPS_ENABLE && link.startsWith('http:')) {
+    link = link.replace('http:', 'https:')
+  }
+
+  return link
+}

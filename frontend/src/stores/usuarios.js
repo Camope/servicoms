@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { loginUserApi, getUsersApi, getUserByLinkApi, postUserApi, putUserApi, patchUserPasswordApi, deleteUserApi } from '@/stores/api-service'
+import { loginUsuarioApi, getUsuariosApi, getUsuarioPorLinkApi, postUsuarioApi, putUsuarioApi, patchUsuarioPasswordApi, deleteUsuarioApi } from '@/stores/api-service'
 import { addFullName } from '@/js/utils'
 
 export const useUsuariosStore = defineStore('usuarios', {
@@ -31,7 +31,7 @@ export const useUsuariosStore = defineStore('usuarios', {
 
     loginUser(usuarioId) {
       this.initRequest()
-      loginUserApi(usuarioId).then((response) => {
+      loginUsuarioApi(usuarioId).then((response) => {
         this.usuarioLogueado = response.data
         this.successfulEnding()
       })
@@ -40,7 +40,7 @@ export const useUsuariosStore = defineStore('usuarios', {
 
     getUsuarios() {
       this.initRequest()
-      getUsersApi().then((response) => {
+      getUsuariosApi().then((response) => {
         this.listaUsuarios = response.data._embedded ? response.data._embedded.listaUsuarios : []
         this.listaUsuarios.forEach(u => addFullName(u))
         this.successfulEnding()
@@ -52,7 +52,7 @@ export const useUsuariosStore = defineStore('usuarios', {
       let index = this.listaUsuarios.findIndex((u) => u._links.self.href == usuarioUrl)
       this.usuarioSeleccionado = this.listaUsuarios[index]
       this.initRequest()
-      getUserByLinkApi(usuarioUrl).then((response) => {
+      getUsuarioPorLinkApi(usuarioUrl).then((response) => {
         addFullName(response.data)
         this.usuarioSeleccionado = response.data
         this.listaUsuarios[index] = response.data
@@ -67,7 +67,7 @@ export const useUsuariosStore = defineStore('usuarios', {
       let body = (({ nombre, apellidos, tip, empleo, email, role, password }) =>
       ({ nombre, apellidos, tip, empleo, email, role, password }))(usuario)
       
-      postUserApi(body).then((response) => {
+      postUsuarioApi(body).then((response) => {
         addFullName(response.data)
         this.listaUsuarios.push(response.data)
         this.successfulEnding()
@@ -81,7 +81,7 @@ export const useUsuariosStore = defineStore('usuarios', {
       let body = (({ nombre, apellidos, tip, empleo, email, role }) =>
       ({ nombre, apellidos, tip, empleo, email, role }))(usuario)
       
-      putUserApi(usuario._links.self.href, body).then((response) => {
+      putUsuarioApi(usuario._links.self.href, body).then((response) => {
         addFullName(response.data)
         let index = this.listaUsuarios.findIndex((u) => u._links.self.href == response.data._links.self.href)
         this.listaUsuarios[index] = response.data
@@ -92,7 +92,7 @@ export const useUsuariosStore = defineStore('usuarios', {
 
     changePassword(usuario) {
       this.initRequest()
-      patchUserPasswordApi(usuario._links.self.href, usuario.password).then((response) => {
+      patchUsuarioPasswordApi(usuario._links.self.href, usuario.password).then((response) => {
         this.successfulEnding()
       })
         .catch((error) => this.processError(error))
@@ -100,7 +100,7 @@ export const useUsuariosStore = defineStore('usuarios', {
 
     removeUser(user) {
       this.initRequest()
-      deleteUserApi(user._links.self.href).then((response) => {
+      deleteUsuarioApi(user._links.self.href).then((response) => {
         let indexToRemove = this.listaUsuarios.findIndex((u) => u._links.self.href == user._links.self.href)
         if (indexToRemove > -1) this.listaUsuarios.splice(indexToRemove, 1)
         this.usuarioSeleccionado = null

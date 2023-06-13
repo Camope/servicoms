@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { getApplicantsByVacancyApi, getApplicationsByUserApi, postApplicationApi, deleteApplicationApi } from '@/stores/api-service'
+import { getSolicitantesPorComisionApi, getSolicitudesPorUsuarioApi, postSolicitudApi, deleteSolicitudApi } from '@/stores/api-service'
 import { addFullName } from '@/js/utils'
 
 export const useSolicitudesStore = defineStore('solicitudes', {
@@ -16,7 +16,7 @@ export const useSolicitudesStore = defineStore('solicitudes', {
     getSolicitantesPorComision(comision) {
       this.initRequest()
       this.listaDeSolicitantes = []
-      getApplicantsByVacancyApi(comision._links.self.href).then((response) => {
+      getSolicitantesPorComisionApi(comision._links.self.href).then((response) => {
         this.listaDeSolicitantes = response.data._embedded ? response.data._embedded.listaUsuarios : []
         this.listaDeSolicitantes.forEach(u => addFullName(u))
         this.successfulEnding()
@@ -26,7 +26,7 @@ export const useSolicitudesStore = defineStore('solicitudes', {
 
     getSolicitudesPorUsuario(userLink) {
       this.initRequest()
-      getApplicationsByUserApi(userLink).then((response) => {
+      getSolicitudesPorUsuarioApi(userLink).then((response) => {
         this.solicitudes = response.data._embedded ? response.data._embedded.listaSolicitudes : []
         this.successfulEnding()
       })
@@ -36,7 +36,7 @@ export const useSolicitudesStore = defineStore('solicitudes', {
     postSolicitud(comision, usuario) {
       this.initRequest()
       let body = {comision: comision._links.self.href, usuario: usuario._links.self.href}
-      postApplicationApi(body).then((response) => {
+      postSolicitudApi(body).then((response) => {
         this.solicitudes.push(response.data)
         this.successfulEnding()
       })
@@ -45,7 +45,7 @@ export const useSolicitudesStore = defineStore('solicitudes', {
 
     removeSolicitud(solicitud) {
       this.initRequest()
-      deleteApplicationApi(solicitud._links.self.href).then((response) => {
+      deleteSolicitudApi(solicitud._links.self.href).then((response) => {
         let indexToRemove = this.solicitudes.indexOf(solicitud)
         if (indexToRemove > -1) this.solicitudes.splice(indexToRemove, 1)
         this.successfulEnding()

@@ -23,6 +23,9 @@ export default {
     if (!this.comisionSeleccionada) {
       this.$router.push({ name: "comisiones" })
     }
+    if (this.isNotAdmin) {
+      this.getSolicitudesPorUsuario(this.usuarioLogueado._links.self.href)
+    }
   },
   mounted() {
   },
@@ -70,7 +73,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(useSolicitudesStore, ['postSolicitud', 'removeSolicitud', 'isApplicant', 'getSolicitud']),
+    ...mapActions(useSolicitudesStore, ['getSolicitudesPorUsuario', 'postSolicitud', 'removeSolicitud', 'isApplicant', 'getSolicitud']),
     ...mapActions(useComisionesStore, ['seleccionaComision', 'editComision', 'removeComision', 'resetEstadoComisionesStore']),
     volver() {
       this.$router.go(-1)
@@ -128,41 +131,46 @@ export default {
 
         <ProgressSpinner v-if="loadingComisionesStore" class="spinner-6 overlay-spinner" />
         <div v-if="comisionSeleccionada">
-          <div class="field col-12 encabezado">{{ comisionSeleccionada.puesto }} {{ mensajeEstado }}</div>
-          <Divider />
-          <ul>
-            <li><span class="negrita">Empleo:</span><span class="ml-2">{{ comisionSeleccionada.empleo }}</span></li>
-            <li>
-              <span class="negrita">Especialidad:</span><span class="ml-2">{{ comisionSeleccionada.especialidad }}</span>
-            </li>
-            <li><span class="negrita">Localidad:</span><span class="ml-2">{{ comisionSeleccionada.localidad }}</span></li>
-            <li>
-              <span class="negrita">Duración:</span>
-              <span class="ml-2">{{ comisionSeleccionada.duracion }} {{ comisionSeleccionada.duracion > 1 ? "meses" :
-                "mes" }}</span>
-            </li>
-            <li><span class="negrita">Fecha límite solicitud:</span><span class="ml-2">{{ fechaLimite }}</span></li>
-            <li><span class="negrita">Tipo:</span><span class="ml-2">{{ tipoComision }}</span></li>
-            <li>
-              <span class="negrita">Descripción:</span>
-              <pre
-                class="p-component ml-3 mt-2">{{ comisionSeleccionada.detalles ? comisionSeleccionada.detalles : "" }}</pre>
-            </li>
-          </ul>
-        </div>
-        <div class="flex justify-content-around">
-          <Button label="Volver" icon="pi pi-arrow-left" severity="secondary" text @click="volver" />
-          <Button v-if="muestraSolicitar" label="Solicitar" icon="pi pi-check" severity="success" text
-            @click="solicitar" />
-          <Button v-if="muestraEditar" label="Editar" icon="pi pi-pencil" severity="success" text @click="editar" />
-          <Button v-if="muestraAnular" label="Anular" icon="pi pi-times" severity="danger" text @click="anular" />
+          <div>
+            <div class="field col-12 encabezado">{{ comisionSeleccionada.puesto }} {{ mensajeEstado }}</div>
+            <Divider />
+            <ul>
+              <li><span class="negrita">Empleo:</span><span class="ml-2">{{ comisionSeleccionada.empleo }}</span></li>
+              <li>
+                <span class="negrita">Especialidad:</span><span class="ml-2">{{ comisionSeleccionada.especialidad
+                }}</span>
+              </li>
+              <li><span class="negrita">Localidad:</span><span class="ml-2">{{ comisionSeleccionada.localidad }}</span>
+              </li>
+              <li>
+                <span class="negrita">Duración:</span>
+                <span class="ml-2">{{ comisionSeleccionada.duracion }} {{ comisionSeleccionada.duracion > 1 ? "meses" :
+                  "mes" }}</span>
+              </li>
+              <li><span class="negrita">Fecha límite solicitud:</span><span class="ml-2">{{ fechaLimite }}</span></li>
+              <li><span class="negrita">Tipo:</span><span class="ml-2">{{ tipoComision }}</span></li>
+              <li>
+                <span class="negrita">Descripción:</span>
+                <pre
+                  class="p-component ml-3 mt-2">{{ comisionSeleccionada.detalles ? comisionSeleccionada.detalles : "" }}</pre>
+              </li>
+            </ul>
+          </div>
+          <div class="flex justify-content-around">
+            <Button label="Volver" icon="pi pi-arrow-left" severity="secondary" text @click="volver" />
+            <Button v-if="muestraSolicitar" label="Solicitar" icon="pi pi-check" severity="success" text
+              @click="solicitar" />
+            <Button v-if="muestraEditar" label="Editar" icon="pi pi-pencil" severity="success" text @click="editar" />
+            <Button v-if="muestraAnular" label="Anular" icon="pi pi-times" severity="danger" text @click="anular" />
+          </div>
         </div>
       </Panel>
 
       <ListadoSolicitantes v-if="muestraListado" :comision="comisionSeleccionada" />
     </div>
 
-    <Dialog v-model:visible="preguntaConfirmacion" :style="{ width: '450px', margin: '0.75rem' }" header="Confirmación" :modal="true">
+    <Dialog v-model:visible="preguntaConfirmacion" :style="{ width: '450px', margin: '0.75rem' }" header="Confirmación"
+      :modal="true">
       <div>
         <i class="pi pi-exclamation-triangle mr-3" style="font-size: 2rem" />
         <span>¿Seguro que quiere anular la {{ isAdmin ? "comisión" : "solicitud" }}?</span>
@@ -173,8 +181,8 @@ export default {
       </template>
     </Dialog>
 
-    <Dialog :visible="mensajeConfirmacion" :style="{ width: '450px', margin: '0.75rem' }" header="Información" :modal="true"
-      @update:visible="cerrarMensajeConfirmacion">
+    <Dialog :visible="mensajeConfirmacion" :style="{ width: '450px', margin: '0.75rem' }" header="Información"
+      :modal="true" @update:visible="cerrarMensajeConfirmacion">
       <div>
         <span class="texto-rojo">¡Su solicitud ha sido realizada!</span>
       </div>

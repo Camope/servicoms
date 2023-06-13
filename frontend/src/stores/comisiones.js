@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
-import { getComisionesApi, postComisionesApi, putVacancyApi, deleteVacancyApi,
-  getVacanciesByUserApi, getVacancyApi } from '@/stores/api-service'
+import { getComisionesApi, postComisionApi, putComisionApi, deleteComisionApi,
+  getComisionesPorUsuarioApi, getComisionApi } from '@/stores/api-service'
 
 export const useComisionesStore = defineStore('comision', {
   state: () => ({
@@ -23,7 +23,7 @@ export const useComisionesStore = defineStore('comision', {
     },
     getComisionesPorUsuario(usuario){
       this.initRequest()
-      getVacanciesByUserApi(usuario._links.self.href).then((response) => {
+      getComisionesPorUsuarioApi(usuario._links.self.href).then((response) => {
         this.listaComisiones = response.data._embedded ? response.data._embedded.listaComisiones : []
         this.successfulEnding()
       })
@@ -31,7 +31,7 @@ export const useComisionesStore = defineStore('comision', {
     },
     saveComision(comision) {
       this.initRequest()
-      postComisionesApi(comision).then((response) => {
+      postComisionApi(comision).then((response) => {
         this.listaComisiones.push(response.data)
         this.successfulEnding()
       })
@@ -41,7 +41,7 @@ export const useComisionesStore = defineStore('comision', {
       let index = this.listaComisiones.findIndex((c) => c._links.self.href == comisionLink)
       this.comisionSeleccionada = (index > -1) ? this.listaComisiones[index] : null
       this.initRequest()
-      getVacancyApi(comisionLink).then((response) => {
+      getComisionApi(comisionLink).then((response) => {
         response.data.fechaLimite = new Date(response.data.fechaLimite)
         this.comisionSeleccionada = response.data
         this.successfulEnding()
@@ -54,7 +54,7 @@ export const useComisionesStore = defineStore('comision', {
       let body = (({ puesto, localidad, especialidad, empleo, fechaLimite, duracion, detalles, tipo, riesgo, perfil }) =>
         ({ puesto, localidad, especialidad, empleo, fechaLimite, duracion, detalles, tipo, riesgo, perfil }))(comision)
 
-        putVacancyApi(comision._links.self.href, body).then((response) => {
+        putComisionApi(comision._links.self.href, body).then((response) => {
         this.comisionSeleccionada = response.data
         this.comisionSeleccionada.fechaLimite = new Date(this.comisionSeleccionada.fechaLimite)
         this.successfulEnding()
@@ -63,7 +63,7 @@ export const useComisionesStore = defineStore('comision', {
     },
     removeComision(comision) {
       this.initRequest()
-      deleteVacancyApi(comision._links.self.href).then((response) => {
+      deleteComisionApi(comision._links.self.href).then((response) => {
         let indexToRemove = this.listaComisiones.indexOf(comision)
         if (indexToRemove > -1) this.listaComisionesCompleta.splice(indexToRemove, 1)
         this.comisionSeleccionada = null

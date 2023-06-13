@@ -1,6 +1,7 @@
 <script>
 import { mapActions, mapState } from 'pinia'
 import { useUsuariosStore } from '@/stores/usuarios'
+import { useSolicitudesStore } from '@/stores/solicitudes'
 import MenuDesplegable from './MenuDesplegable.vue'
 
 export default {
@@ -27,6 +28,7 @@ export default {
   watch: {
     isLoggedIn(newLoginState) {
       if (newLoginState) {
+        this.getSolicitudesPorUsuario(this.usuarioLogueado._links.self.href)
         this.configuraLoginMenuTemplate()
         this.menuTemplate = this.loginMenuTemplate
       } else {
@@ -50,6 +52,7 @@ export default {
   },
   methods: {
     ...mapActions(useUsuariosStore, ['loginUser', 'logoutUser']),
+    ...mapActions(useSolicitudesStore, ['getSolicitudesPorUsuario']),
     configuraLoginMenuTemplate() {
       this.loginMenuTemplate.header.name = this.usuarioLogueado.nombre
       this.loginMenuTemplate.header.surname = this.isAdmin ? 'Admin' : 'Usuario'
