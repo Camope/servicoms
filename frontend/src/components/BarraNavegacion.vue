@@ -22,7 +22,6 @@ export default {
         { divider: true, icon: 'pi-fw pi-sign-out', text: 'Logout', clickMessage: 'logout' },]
       },
       menuTemplate: null,
-      muestraMenu: false,
     }
   },
   watch: {
@@ -63,7 +62,7 @@ export default {
       if (role == 'admin') {
         this.loginUser(1) // El usuario 1 es administrador en los datos de prueba
       } else {
-        this.loginUser(Math.floor(Math.random() * 4) + 3 ) // Los usuarios 3 al 6 son normales en los datos de prueba
+        this.loginUser(Math.floor(Math.random() * 4) + 3) // Los usuarios 3 al 6 son normales en los datos de prueba
       }
       this.goHome()
     },
@@ -81,7 +80,7 @@ export default {
       this.$router.push({ name: 'usuarios' })
     },
     seleccionarOpcion(opcion) {
-      this.muestraMenu = false
+
       if (opcion == 'adminLogin') {
         this.login('admin')
       } else if (opcion == 'userLogin') {
@@ -90,7 +89,7 @@ export default {
         this.logout()
       } else if (opcion == 'comisiones') {
         this.goHome()
-      } else if (opcion == 'miscomisiones') {
+      } else if (opcion == 'misComisiones') {
         this.misComisiones()
       } else if (opcion == 'usuarios') {
         this.gestionUsuarios()
@@ -107,25 +106,25 @@ export default {
     <div class="p-menubar flex align-items-center justify-content-between">
       <div class="logo">
         <router-link :to="{ name: 'comisiones' }">
-          <img alt="logo" src="/src/assets/sc.png" class="mr-2 imagen-logo" >
+          <img alt="logo" src="/src/assets/sc.png" class="mr-2 imagen-logo">
         </router-link>
         <span class="texto-logo">ServiComs</span>
       </div>
 
-      <div @click="muestraMenu = !muestraMenu">
-          <Button v-if="!isLoggedIn" label="Inicia Sesión" severity="info" size="small" />
-          <Button v-else icon="pi pi-user" severity="warning" rounded />
+      <div class="btn-group">
+        <button type="button" class="p-button p-component p-button-info p-button-sm"
+          data-bs-toggle="dropdown" aria-expanded="false">
+          <span v-if="isLoggedIn" class="p-button-icon pi pi-user"></span>
+          <span v-else class="">Inicia Sesión</span>
+        </button>
+        <MenuDesplegable :menuTemplate="menuTemplate" @selectMenuOption="seleccionarOpcion" />
       </div>
 
-      <MenuDesplegable :visible="muestraMenu" :menuTemplate="menuTemplate" @selectMenuOption="seleccionarOpcion" />
-
-      
     </div>
   </div>
 </template>
 
 <style scoped>
-
 @import url('https://fonts.googleapis.com/css2?family=Michroma&display=swap');
 
 .logo {
@@ -142,5 +141,4 @@ export default {
 .imagen-logo {
   width: 2.5rem;
 }
-
 </style>
