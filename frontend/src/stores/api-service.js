@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-const host = 'https://servicomsapi-camorpe.b4a.run/api'
-const HTTP_TO_HTTPS_ENABLE = true
+const host = 'http://localhost:8080/api'// 'https://servicomsapi-camorpe.b4a.run/api'
+const HTTP_TO_HTTPS_ENABLE = false //true
 
 function apiRequest(path, method, body) {
   let config = {
@@ -97,6 +97,9 @@ export async function putComisionApi(comisionLink, body) {
   return putApi(comisionLink, body)
 }
 
+export async function getStatsApi(params) {
+  return getApi(`${host}/comisiones/stats${params ? ('?' + params) : ''}`)
+}
 
 
 export async function getSolicitantesPorComisionApi(comisionLink) {

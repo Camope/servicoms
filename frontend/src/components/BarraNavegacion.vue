@@ -3,17 +3,19 @@ import { mapActions, mapState } from 'pinia'
 import { useUsuariosStore } from '@/stores/usuarios'
 import { useSolicitudesStore } from '@/stores/solicitudes'
 import MenuDesplegable from './MenuDesplegable.vue'
+import DialogoEstadistica from './DialogoEstadistica.vue'
 
 export default {
   props: [],
-  components: { MenuDesplegable },
+  components: { MenuDesplegable, DialogoEstadistica },
   emits: [],
   data() {
     return {
       logoutMenuTemplate: {
         header: { icon: 'pi-sign-in', name: 'Login', surname: '' },
         body: [{ divider: true, icon: 'pi-fw pi-user', text: 'Admin', clickMessage: 'adminLogin' },
-        { divider: false, icon: 'pi-fw pi-users', text: 'User', clickMessage: 'userLogin' }]
+        { divider: false, icon: 'pi-fw pi-users', text: 'User', clickMessage: 'userLogin' },
+        { divider: true, icon: 'pi-fw pi-calculator', text: 'Estadísticas', clickMessage: 'estadisticas' }]
       },
       loginMenuTemplate: {
         header: { icon: 'pi-user', name: '', surname: '' },
@@ -22,6 +24,7 @@ export default {
         { divider: true, icon: 'pi-fw pi-sign-out', text: 'Logout', clickMessage: 'logout' },]
       },
       menuTemplate: null,
+      dialogoEstadisticaVisible: false,
     }
   },
   watch: {
@@ -93,6 +96,8 @@ export default {
         this.misComisiones()
       } else if (opcion == 'usuarios') {
         this.gestionUsuarios()
+      } else if (opcion == 'estadisticas') {
+        this.dialogoEstadisticaVisible = true
       }
 
     }
@@ -102,25 +107,27 @@ export default {
 </script>
 
 <template>
-  <div class="card">
-    <div class="p-menubar flex align-items-center justify-content-between">
-      <div class="logo">
-        <router-link :to="{ name: 'comisiones' }">
-          <img alt="logo" src="/src/assets/sc.png" class="mr-2 imagen-logo">
-        </router-link>
-        <span class="texto-logo">ServiComs</span>
-      </div>
+  <div>
+    <div class="card">
+      <div class="p-menubar flex align-items-center justify-content-between">
+        <div class="logo">
+          <router-link :to="{ name: 'comisiones' }">
+            <img alt="logo" src="/src/assets/sc.png" class="mr-2 imagen-logo">
+          </router-link>
+          <span class="texto-logo">ServiComs</span>
+        </div>
 
-      <div class="btn-group">
-        <button type="button" class="p-button p-component p-button-info p-button-sm"
-          data-bs-toggle="dropdown" aria-expanded="false">
-          <span v-if="isLoggedIn" class="p-button-icon pi pi-user"></span>
-          <span v-else class="">Inicia Sesión</span>
-        </button>
-        <MenuDesplegable :menuTemplate="menuTemplate" @selectMenuOption="seleccionarOpcion" />
-      </div>
+        <div class="btn-group">
+          <button type="button" class="p-button p-component p-button-sm p-button-info" id="dropdownMenuButton1" data-bs-toggle="dropdown">
+            <span v-if="isLoggedIn" class="p-button-icon pi pi-user"></span>
+            <span v-else class="">Inicia Sesión</span>
+          </button>
+          <MenuDesplegable :menuTemplate="menuTemplate" @selectMenuOption="seleccionarOpcion" />
+        </div>
 
+      </div>
     </div>
+    <DialogoEstadistica v-model:visible="dialogoEstadisticaVisible" />
   </div>
 </template>
 

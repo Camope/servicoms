@@ -1,15 +1,22 @@
 import { defineStore } from 'pinia'
 import { getComisionesApi, postComisionApi, putComisionApi, deleteComisionApi,
-  getComisionesPorUsuarioApi, getComisionApi } from '@/stores/api-service'
+  getComisionesPorUsuarioApi, getComisionApi, getStatsApi } from '@/stores/api-service'
 
 export const useComisionesStore = defineStore('comision', {
   state: () => ({
-    loadingComisionesStore: false,
+    //loadingComisionesStore: false,
+    queriesSinRespuesta: 0,
     erroredComisionesStore: false,
     listaComisiones: [],
     comisionSeleccionada: null,
+    datosEstadisticos: { todas: { duracionMedia: NaN },
+                          viogen: { duracionMedia: NaN },
+                          extranjero: { duracionMedia: NaN }}
   }),
   getters: {
+    loadingComisionesStore() {
+      return this.queriesSinRespuesta > 0
+    }
   },
   actions: {
 
@@ -71,19 +78,35 @@ export const useComisionesStore = defineStore('comision', {
       })
         .catch((error) => this.processError(error))
     },
+    getDuracionMedia(tipoComision) {
+      this.initRequest()
+      getStatsApi(tipoComision == 'todas' ? '' : ('tipo=' + tipoComision.toUpperCase())).then((response) => {
+        this.datosEstadisticos[tipoComision].duracionMedia = parseInt(response.data.duracionMedia).toFixed(1)
+        this.successfulEnding()
+      })
+        .catch((error) => this.processError(error))
+    },
+    getDatosEstadisticos() {
+      ['todas', 'extranjero', 'viogen'].forEach(tipo => this.getDuracionMedia(tipo))
+    },
 
     initRequest() {
-      this.loadingComisionesStore = true
+      //this.loadingComisionesStore = true
+      this.queriesSinRespuesta++
       this.erroredComisionesStore = false
     },
     successfulEnding() {
-      this.resetEstadoComisionesStore()
+      if(this.queriesSinRespuesta > 0) {
+        this.queriesSinRespuesta--
+      }
+      //this.resetEstadoComisionesStore()
     },
     processError(error) {
       this.erroredComisionesStore = true
     },
     resetEstadoComisionesStore() {
-      this.loadingComisionesStore = false
+      //this.loadingComisionesStore = false
+      this.queriesSinRespuesta = 0
       this.erroredComisionesStore = false
     },
 
