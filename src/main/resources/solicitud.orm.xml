@@ -9,10 +9,10 @@
 				<column name="fechaSolicitud" column-definition="TIMESTAMP WITH TIME ZONE"/>
 			</basic>
 			<many-to-one name="comision" target-entity="es.interior.serviComsApi.entidades.ComisionApi" fetch="LAZY" optional="false">
-				<join-column name="comision_id"/>
+				<join-column name="comisionId"/>
 			</many-to-one>
 			<many-to-one name="usuario" target-entity="es.interior.serviComsApi.entidades.UsuarioApi" fetch="LAZY" optional="false">
-				<join-column name="usuario_id"/>
+				<join-column name="usuarioId"/>
 			</many-to-one>
         </attributes>
      </mapped-superclass>

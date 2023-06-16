@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.springframework.hateoas.CollectionModel;
+import org.springframework.hateoas.EntityModel;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import es.interior.serviComsApi.entidades.UsuarioApi;
@@ -38,7 +40,8 @@ public class ComisionController {
 	private final Logger log;
 
 	ComisionController(ComisionRepositorio repositorio, ComisionAssembler assembler,
-			ComisionListaAssembler listaAssembler, SolicitudAssembler<Solicitud> solicitudAssembler, UsuarioListaAssembler usuarioListaAssembler) {
+			ComisionListaAssembler listaAssembler, SolicitudAssembler<Solicitud> solicitudAssembler,
+			UsuarioListaAssembler usuarioListaAssembler) {
 
 		this.repositorio = repositorio;
 		this.assembler = assembler;
@@ -48,7 +51,6 @@ public class ComisionController {
 
 		log = ServiComsApiApplication.log;
 	}
-
 
 	@GetMapping("{id}")
 	public ComisionModel getOne(@PathVariable Long id) {
@@ -115,10 +117,9 @@ public class ComisionController {
 				.orElseThrow(() -> new RegisterNotFoundException(id, "comision")).getSolicitudes();
 
 		return solicitudAssembler.toCollection(solicitudes)
-				.add(linkTo(methodOn(ComisionController.class).getOne(id)).slash("solicitudes")
-						.withSelfRel());
+				.add(linkTo(methodOn(ComisionController.class).getOne(id)).slash("solicitudes").withSelfRel());
 	}
-	
+
 	@GetMapping("{id}/usuarios")
 	public CollectionModel<UsuarioListaModel> getSolicitantes(@PathVariable Long id) {
 
@@ -126,8 +127,35 @@ public class ComisionController {
 				.orElseThrow(() -> new RegisterNotFoundException(id, "comision")).getSolicitudes().stream()
 				.map(s -> (UsuarioApi) s.getUsuario()).collect(Collectors.toList());
 
-		return usuarioListaAssembler.toCollection(usuarios).add(
-				linkTo(methodOn(ComisionController.class).getOne(id)).slash("usuarios").withSelfRel());
+		return usuarioListaAssembler.toCollection(usuarios)
+				.add(linkTo(methodOn(ComisionController.class).getOne(id)).slash("usuarios").withSelfRel());
+	}
+
+	@GetMapping(value = "/stats", params = "tipo")
+	public EntityModel<EstadisticaModel> getEstadisticasPorTipo(@RequestParam(value = "tipo") Tipo tipoComision) {
+
+		Character tipoComisionChar = null;
+
+		if (tipoComision == Tipo.EXTRANJERO) {
+			tipoComisionChar = 'E';
+		} else if (tipoComision == Tipo.VIOGEN) {
+			tipoComisionChar = 'V';
+		}
+
+		EstadisticaModel datosEstadisticos = new EstadisticaModel(repositorio.findByTipoComision(tipoComisionChar));
+
+		return EntityModel.of(datosEstadisticos)
+				.add(linkTo(methodOn(ComisionController.class).getEstadisticasPorTipo(tipoComision)).withSelfRel());
 	}
 	
+	@GetMapping("/stats")
+	public EntityModel<EstadisticaModel> getEstadisticas() {
+
+		EstadisticaModel datosEstadisticos = new EstadisticaModel(repositorio.findAll());
+
+		return EntityModel.of(datosEstadisticos)
+				.add(linkTo(methodOn(ComisionController.class).getEstadisticas()).withSelfRel());
+	}
+
+
 }

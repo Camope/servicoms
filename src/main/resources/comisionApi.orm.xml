@@ -7,7 +7,7 @@
 		<table name="COMISIONES"/>
 		<inheritance strategy="SINGLE_TABLE"/>
 		<discriminator-value>null</discriminator-value>
-		<discriminator-column name="tipo_comision" discriminator-type="CHAR"/>
+		<discriminator-column name="tipoComision" discriminator-type="CHAR"/>
         <attributes> 
         	<id name="id"> 
                 <generated-value strategy="IDENTITY"/> 

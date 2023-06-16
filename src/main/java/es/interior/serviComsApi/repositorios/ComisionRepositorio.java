@@ -1,6 +1,8 @@
 package es.interior.serviComsApi.repositorios;
 
 import java.time.OffsetDateTime;
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -19,5 +21,8 @@ public interface ComisionRepositorio extends JpaRepository<ComisionApi, Long> {
 			nativeQuery = true)
 	int update(String puesto, String localidad, String especialidad, String empleo, OffsetDateTime fechaLimite,
 			Integer duracion, String detalles, Character tipoComision, String perfil, String riesgo, Long id);
+	
+	@Query(value = "SELECT * FROM comisiones WHERE tipo_comision=?1", nativeQuery = true)
+	List<ComisionApi> findByTipoComision(Character tipoComision);
 
 }

@@ -6,8 +6,8 @@
     <entity class="es.interior.serviComsApi.entidades.SolicitudApi" access="FIELD">
 		<table name="SOLICITUDES">
        		<unique-constraint>
-            	<column-name>comision_id</column-name>
-            	<column-name>usuario_id</column-name>
+            	<column-name>comisionId</column-name>
+            	<column-name>usuarioId</column-name>
         	</unique-constraint>
 		</table>
         <attributes>
