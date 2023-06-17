@@ -72,9 +72,9 @@ export default {
             let result = a[this.sortRule.rule].localeCompare(b[this.sortRule.rule])
             return this.sortRule.reverse ? -result : result
           })
-        } else if (typeof this.elementList[0][data] == 'number') {
+        } else if (typeof this.elementList[0][this.sortRule.rule] == 'number') {
           this.elementList.sort((a, b) => {
-            let result = a[data] - b[data]
+            let result = a[this.sortRule.rule] - b[this.sortRule.rule]
             return this.sortRule.reverse ? -result : result
           })
         }

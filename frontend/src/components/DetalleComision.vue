@@ -105,7 +105,7 @@ export default {
     anulaSolicitud() {
       this.removeSolicitud(this.getSolicitud(this.comisionSeleccionada._links.self.href))
     },
-    borrar() {
+    borrarComision() {
       this.removeComision(this.comisionSeleccionada)
       this.confirmacionPendiente = true
     },
@@ -151,8 +151,7 @@ export default {
               <li><span class="negrita">Tipo:</span><span class="ml-2">{{ tipoComision }}</span></li>
               <li>
                 <span class="negrita">Descripción:</span>
-                <pre
-                  class="p-component ml-3 mt-2">{{ comisionSeleccionada.detalles ? comisionSeleccionada.detalles : "" }}</pre>
+                <pre class="p-component ml-3 mt-2 texto-preformateado">{{ comisionSeleccionada.detalles ? comisionSeleccionada.detalles : "" }}</pre>
               </li>
             </ul>
           </div>
@@ -223,5 +222,9 @@ export default {
 
 .texto-rojo {
   color: red;
+}
+
+.texto-preformateado {
+  white-space: pre-wrap;
 }
 </style>

@@ -58,7 +58,7 @@ export default {
       }
 
       if (this.palabraBuscada != '') {
-        listaComisionesFiltrada = this.listaComisionesFiltrada.filter(c => {
+        listaComisionesFiltrada = listaComisionesFiltrada.filter(c => {
           for (const campo of this.camposDeBusqueda) {
             if (typeof c[campo] === 'string' || c[campo] instanceof String) {
               if (c[campo].toLowerCase().includes(this.palabraBuscada.toLowerCase())) {

@@ -19,21 +19,12 @@ export default {
       isLargeDevice: true,
       indices: [0],
       hover: false,
+      umbral: 604800, // 1 Semana en segundos
     }
   },
   updated() {
   },
   created() {
-    const SEMANA = 7 * 24 * 3600 // 1 Semana en segundos
-
-    // Configuración de la etiqueta en función del plazo de finalización
-    if (this.element.estado > SEMANA) {
-      this.etiqueta = { value: 'En plazo', severity: 'p-tag-success' }
-    } else if (this.element.estado < 0) {
-      this.etiqueta = { value: 'Cerrada', severity: 'p-tag-danger' }
-    } else {
-      this.etiqueta = { value: 'Finalizando', severity: 'p-tag-warning' }
-    }
 
     for (let i = 2; i < this.titles.length; i++) {
       this.indices.push(i)
@@ -50,11 +41,21 @@ export default {
 
   },
   computed: {
-    getSeverityLabel() {
-      return this.etiqueta.severity
+    getLabel() {
+      let label
+
+      if (this.element.estado > this.umbral) {
+        label = { value: 'En plazo', severity: 'p-tag-success' }
+      } else if (this.element.estado < 0) {
+        label = { value: 'Cerrada', severity: 'p-tag-danger' }
+      } else {
+        label = { value: 'Finalizando', severity: 'p-tag-warning' }
+      }
+
+      return label
     },
     isClosed() {
-      return this.etiqueta.value == 'Cerrada'
+      return this.getLabel.value == 'Cerrada'
     },
   },
   methods: {
@@ -69,13 +70,13 @@ export default {
 </script>
 
 <template>
-  <div class="comision-item" :class="{ active: hover }" @mouseover="hover = hoverable"
-      @mouseleave="hover = false" @click="rowSelect">
+  <div class="comision-item" :class="{ active: hover }" @mouseover="hover = hoverable" @mouseleave="hover = false"
+    @click="rowSelect">
     <div v-if="isLargeDevice" class="flex">
       <TituloItem v-for="title in titles" ref="comisionRef" :title="title.campo != 'estado' ? element[title.campo] : ''"
         :styles="title.styles" :showIcon="false" :hoverable="false">
-        <span v-if="title.campo == 'estado'" class="p-tag p-component" :class="getSeverityLabel">
-          <span class="p-tag-value">{{ etiqueta.value }}</span>
+        <span v-if="title.campo == 'estado'" class="p-tag p-component" :class="getLabel.severity">
+          <span class="p-tag-value">{{ getLabel.value }}</span>
         </span>
       </TituloItem>
     </div>
@@ -89,7 +90,7 @@ export default {
           <li v-for="i in indices">
             <span class="negrita">{{ titles[i].title }}:</span>
             <span class="ml-2" :class="{ rojo: isClosed && (titles[i].campo == 'estado') }">
-              {{ (titles[i].campo != 'estado') ? element[titles[i].campo] : etiqueta.value }}
+              {{ (titles[i].campo != 'estado') ? element[titles[i].campo] : getLabel.value }}
             </span>
           </li>
         </ul>
@@ -99,7 +100,6 @@ export default {
 </template>
 
 <style scoped>
-
 .active {
   background-color: #e9ecef !important;
 }
