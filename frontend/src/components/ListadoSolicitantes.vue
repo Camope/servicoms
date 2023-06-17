@@ -3,6 +3,7 @@ import { mapActions, mapState } from 'pinia'
 import { useSolicitudesStore } from '@/stores/solicitudes'
 import EncabezadoLista from './listado/EncabezadoLista.vue'
 import ElementoLista from './listado/ElementoLista.vue'
+import { unparse } from 'papaparse'
 
 export default {
   props: {
@@ -35,12 +36,31 @@ export default {
   },
   methods: {
     ...mapActions(useSolicitudesStore, ['getSolicitantesPorComision']),
+    exportarCSV() {
+      let arrayDatosParaExportar = []
+      this.listaDeSolicitantes.forEach((solicitante) => {
+        arrayDatosParaExportar.push(
+          (({ nombre, apellidos, tip, empleo, email }) =>
+            ({ nombre, apellidos, tip, empleo, email }))(solicitante))
+      })
+
+      let csv = unparse(arrayDatosParaExportar)
+      let csvData = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+      let csvURL = window.URL.createObjectURL(csvData)
+
+      let nombreArchivo = 'solicitantes_' + this.comision.puesto.replaceAll(' ', '_') +
+                          '_' + (new Date()).toLocaleDateString().replaceAll('/', '_')
+      let tempLink = document.createElement('a')
+      tempLink.href = csvURL
+      tempLink.setAttribute('download', nombreArchivo)
+      tempLink.click()
+      URL.revokeObjectURL(tempLink)
+    }
   }
 }
 </script>
 
 <template>
-  <!-- Muestra la lista de solicitantes, si es que hay. En caso contrario notifica dicha situación -->
   <div class="card p-panel p-component">
     <div class="p-panel-header encabezado justify-content-center">
       <span>Lista de solicitantes</span>
@@ -54,6 +74,12 @@ export default {
         <EncabezadoLista :titles="configList" :showIcon="false" :sortable="false" />
         <ElementoLista v-for="solicitante in listaDeSolicitantes" :titles="configList" :element="solicitante"
           :hoverable="false" />
+        <div class="p-panel-footer gap-2 flex justify-content-center">
+          <button class="p-button p-component p-button-secondary p-button-sm" type="button" @click="exportarCSV">
+            <span class="p-button-icon p-button-icon-left pi pi-external-link"></span>
+            <span class="p-button-label">Exportar</span>
+          </button>
+        </div>
       </div>
     </div>
   </div>

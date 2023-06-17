@@ -2,8 +2,8 @@
 import { mapActions, mapState } from 'pinia'
 import { useUsuariosStore } from '@/stores/usuarios'
 import { useSolicitudesStore } from '@/stores/solicitudes'
-import MenuDesplegable from './MenuDesplegable.vue'
-import DialogoEstadistica from './DialogoEstadistica.vue'
+import MenuDesplegable from '@/components/MenuDesplegable.vue'
+import DialogoEstadistica from '@/components/DialogoEstadistica.vue'
 
 export default {
   props: [],
@@ -118,7 +118,7 @@ export default {
         </div>
 
         <div class="btn-group">
-          <button type="button" class="p-button p-component p-button-sm p-button-info" id="dropdownMenuButton1" data-bs-toggle="dropdown">
+          <button type="button" class="p-button p-component p-button-sm p-button-info" data-bs-toggle="dropdown">
             <span v-if="isLoggedIn" class="p-button-icon pi pi-user"></span>
             <span v-else class="">Inicia Sesión</span>
           </button>
