@@ -1,7 +1,7 @@
 import axios from 'axios'
 
-const host = 'http://localhost:8080/api'// 'https://servicomsapi-camorpe.b4a.run/api'
-const HTTP_TO_HTTPS_ENABLE = false //true
+const host = 'https://servicomsapi-camorpe.b4a.run/api'// 'http://localhost:8080/api'
+const HTTP_TO_HTTPS_ENABLE = true
 
 function apiRequest(path, method, body) {
   let config = {
@@ -115,7 +115,7 @@ export async function postSolicitudApi(body) {
 }
 
 export async function deleteSolicitudApi(solicitudLink) {
-  return deleteApi(solicitudLink, 'delete')
+  return deleteApi(solicitudLink)
 }
 
 
