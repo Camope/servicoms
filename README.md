@@ -28,7 +28,7 @@ Las CS podrán tener ninguna, una o muchas solicitudes.
    1. Repositorio proyecto: https://git.institutomilitar.com/PedroggDIM/comisiones
    2. Librería: https://github.com/Camope/servicomsLib.git
 7. **Despliegue** en Internet:
-   1. API: https://servicomsapi-camorpe.b4a.run/
-   2. Web: https://servicoms.netlify.app
+   1. API: https://servicomsapi-camorpe.b4a.run/ ([API Docs](https://documenter.getpostman.com/view/25303525/2s93si2AR9))
+   2. Web: https://servicoms.netlify.app [![Netlify Status](https://api.netlify.com/api/v1/badges/319f274a-2f89-422c-bc12-4865e70526fb/deploy-status)](https://app.netlify.com/sites/servicoms/deploys)
 
 
