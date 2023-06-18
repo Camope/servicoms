@@ -62,7 +62,8 @@ export default {
         }
       }
 
-      this.filtroPlaceholder = this.filtros[index * 2 + this.iconIndexList[index] - 1]
+      this.filtroSeleccionado = this.filtros[index * 2 + this.iconIndexList[index] - 1] 
+      this.filtroPlaceholder = this.filtroSeleccionado
 
       this.$emit('sortRuleChange', this.titles[index].campo, this.iconIndexList[index] == 2)
     },
