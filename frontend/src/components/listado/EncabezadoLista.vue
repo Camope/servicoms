@@ -19,14 +19,17 @@ export default {
     return {
       filtros: [],
       filtroSeleccionado: null,
+      iconClassTypes: ['pi pi-sort-alt', 'pi pi-sort-amount-down-alt', 'pi pi-sort-amount-up-alt'],
+      iconIndexList: [],
       isLargeDevice: true,
+      filtroPlaceholder: 'Aplicar Filtro',
     }
   },
   updated() {
   },
   created() {
-    this.filtros = []
     this.titles.forEach(t => {
+      this.iconIndexList.push(0)
       this.filtros.push(t.title + ' asc.')
       this.filtros.push(t.title + ' desc.')
     })
@@ -42,22 +45,33 @@ export default {
   mounted() {
   },
   computed: {
+
   },
   methods: {
-    cambiaOrden(data, reverse) {
-      this.$refs.titulosRef.forEach(t => {
-        if (t.title != data) {
-          t.resetIcon()
+    cambiaOrden(index, requiredIndexIcon) {
+
+      for (const key in this.iconIndexList) {
+        if (key != index) {
+          this.iconIndexList[key] = 0
+        } else {
+          if ((requiredIndexIcon != undefined) || (requiredIndexIcon != null)){
+            this.iconIndexList[key] = requiredIndexIcon
+          } else {
+            this.iconIndexList[key] = (++this.iconIndexList[key] >= this.iconClassTypes.length) ? 1 : this.iconIndexList[key]
+          }
         }
-      })
-      this.$emit('sortRuleChange', this.titles.find(i => i.title == data).campo, reverse)
+      }
+
+      this.filtroPlaceholder = this.filtros[index * 2 + this.iconIndexList[index] - 1]
+
+      this.$emit('sortRuleChange', this.titles[index].campo, this.iconIndexList[index] == 2)
     },
-    cambiaSelector(data) {
-      let index = this.filtros.findIndex(f => f == data)
-      let reverse = (index % 2) == 1
+    cambiaSelector(opcion) {
+      let index = this.filtros.findIndex(f => f == opcion)
+      let iconIndex = (index % 2) + 1
       index = Math.trunc(index / 2)
 
-      this.cambiaOrden(this.titles[index].title, reverse)
+      this.cambiaOrden(index, iconIndex)
     },
     myEventHandler() {
       this.isLargeDevice = screen.width >= 800
@@ -68,11 +82,12 @@ export default {
 
 <template>
   <div v-if="isLargeDevice" class="comision-item-header flex">
-    <TituloItem v-for="title in titles" ref="titulosRef" :title="title.title" :styles="title.styles" :showIcon="showIcon"
-      :hoverable="sortable" @filterChange="cambiaOrden" />
+    <TituloItem v-for="(title, index) in titles" ref="titulosRef" :title="title.title" :styles="title.styles"
+      :showIcon="showIcon" :iconClass="iconClassTypes[iconIndexList[index]]" :hoverable="sortable"
+      @filterChange="cambiaOrden(index)" />
   </div>
   <div v-if="!isLargeDevice && sortable" class="comision-item-header flex p-2 justify-content-end">
-    <Dropdown v-model="filtroSeleccionado" :options="filtros" placeholder="Aplicar Filtro" class="w-14rem"
+    <Dropdown v-model="filtroSeleccionado" :options="filtros" :placeholder="filtroPlaceholder" class="w-14rem"
       @update:modelValue="cambiaSelector" />
   </div>
 </template>

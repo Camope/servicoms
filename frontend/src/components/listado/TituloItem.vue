@@ -5,15 +5,16 @@ export default {
     title: String,
     styles: String,
     showIcon: Boolean,
+    iconClass: {
+      type: String,
+      default: ''
+    },
     hoverable: Boolean,
   },
   components: {},
   emits: ['filterChange'],
   data() {
     return {
-      iconList: ['pi-sort-alt', 'pi-sort-amount-up-alt', 'pi-sort-amount-down-alt'],
-      iconClass: null,
-      index: 0,
       hover: false
     }
   },
@@ -22,19 +23,12 @@ export default {
   created() {
   },
   mounted() {
-    this.iconClass = this.iconList[0]
   },
   computed: {
   },
   methods: {
     click(event){
-      this.index = this.index == 2 ? 1 : 2
-      this.iconClass = this.iconList[this.index]
-      this.$emit('filterChange', this.title, this.index == 1)
-    },
-    resetIcon(){
-      this.index = 0
-      this.iconClass = this.iconList[0]
+      this.$emit('filterChange', this.title)
     },
   }
 }
@@ -45,7 +39,7 @@ export default {
       @mouseleave="hover = false" :style="styles" @click="click">
     <span>{{ title }}</span>
     <slot></slot>
-    <i v-if="showIcon" class="pi" :class="iconClass" />
+    <i v-if="showIcon" :class="iconClass" />
   </div>
 </template>
 
