@@ -38,7 +38,7 @@ export default {
       return this.comisionSeleccionada.fechaLimite ? this.comisionSeleccionada.fechaLimite.toLocaleDateString('es-ES', options) : ''
     },
     esSolicitante() {
-      return !this.isAdmin && this.isApplicant(this.comisionSeleccionada._links.self.href)
+      return this.isNotAdmin && this.isApplicant(this.comisionSeleccionada._links.self.href)
     },
     muestraSolicitar() {
       return this.isNotAdmin && !this.isApplicant(this.comisionSeleccionada._links.self.href) && !this.loadingComisionesStore
