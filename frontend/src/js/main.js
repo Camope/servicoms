@@ -54,6 +54,14 @@ const router = createRouter({
     routes
 })
 
+import { useUsuariosStore } from '@/stores/usuarios'
+router.beforeEach(async (to, from) => {       
+  const auth = useUsuariosStore()
+  if ((!auth.isAdmin && (to.name == 'usuarios')) || (!auth.isNotAdmin && (to.name == 'miscomisiones'))) {
+    return { name: 'comisiones' }
+  }
+})
+
 const app = createApp(App)
 
 watch(
