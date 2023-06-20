@@ -21,7 +21,8 @@ export default {
         header: { icon: 'pi-user', name: '', surname: '' },
         body: [{ divider: true, icon: null, text: '', clickMessage: '' },
         { divider: false, icon: null, text: 'Lista de Comisiones', clickMessage: 'comisiones' },
-        { divider: true, icon: 'pi-fw pi-sign-out', text: 'Logout', clickMessage: 'logout' },]
+        { divider: true, icon: 'pi-fw pi-calculator', text: 'Estadísticas', clickMessage: 'estadisticas' },
+        { divider: true, icon: 'pi-fw pi-sign-out', text: 'Logout', clickMessage: 'logout' }]
       },
       menuTemplate: null,
       dialogoEstadisticaVisible: false,

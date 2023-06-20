@@ -10,6 +10,10 @@ export default {
       type: Boolean,
       default: true
     },
+    responsiveSize: {
+      type: Number,
+      default: 800
+    }
   },
   components: { TituloItem },
   emits: ['filaSeleccionada'],
@@ -63,7 +67,7 @@ export default {
       this.$emit('filaSeleccionada', this.element)
     },
     myEventHandler() {
-      this.isLargeDevice = screen.width >= 800
+      this.isLargeDevice = window.innerWidth >= this.responsiveSize
     }
   }
 }
