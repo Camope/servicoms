@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const host = 'https://servicomsapi-camorpe.b4a.run/api'
+const host = 'https://container-service-1.vp7o6vfdm7heu.eu-west-3.cs.amazonlightsail.com/api'
 const HTTP_TO_HTTPS_ENABLE = true
 
 function apiRequest(path, method, body) {
