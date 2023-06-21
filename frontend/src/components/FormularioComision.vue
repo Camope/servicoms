@@ -7,7 +7,6 @@ export default {
       type: Object,
     },
   },
-  components: {},
   emits: ['cancelar', 'guardar'],
   data() {
     return {
@@ -15,14 +14,6 @@ export default {
       nueva: true,
       comisionTemp: null,
     }
-  },
-  updated() {
-  },
-  created() {
-    this.nueva = this.comision ? false : true
-    this.comisionTemp = this.nueva ? {} : { ...this.comision }
-  },
-  mounted() {
   },
   computed: {
     hoy() {
@@ -84,7 +75,11 @@ export default {
         this.$emit('guardar', this.comisionTemp)
       }
     },
-  }
+  },
+  created() {
+    this.nueva = this.comision ? false : true
+    this.comisionTemp = this.nueva ? {} : { ...this.comision }
+  },
 }
 </script>
 

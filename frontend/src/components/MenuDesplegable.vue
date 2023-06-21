@@ -10,20 +10,11 @@ export default {
       type: Object,
     },
   },
-  components: {},
   emits: ['selectMenuOption'],
   data() {
     return {
     }
   },
-  created() {
-  },
-  mounted() {
-  },
-  computed: {
-  },
-  methods: {
-  }
 }
 </script>
 

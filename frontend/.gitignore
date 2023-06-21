@@ -25,5 +25,4 @@ dist-ssr
 package-lock.json
 
 # test files
-ListadoComisiones_copy.vue
-ProductService_copy.js
+hosts.txt

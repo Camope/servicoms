@@ -1,24 +1,3 @@
-<script>
-
-export default {
-  props: [],
-  components: {},
-  emits: [],
-  data() {
-    return {
-    }
-  },
-  created() {
-  },
-  mounted() {
-  },
-  computed: {
-  },
-  methods: {
-  }
-}
-</script>
-
 <template>
   <div class="card">
     <div class="p-menubar p-component footer">

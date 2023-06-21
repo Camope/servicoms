@@ -26,24 +26,6 @@ export default {
       umbral: 604800, // 1 Semana en segundos
     }
   },
-  updated() {
-  },
-  created() {
-
-    for (let i = 2; i < this.titles.length; i++) {
-      this.indices.push(i)
-    }
-
-    this.myEventHandler()
-
-    window.addEventListener("resize", this.myEventHandler)
-  },
-  destroyed() {
-    window.removeEventListener("resize", this.myEventHandler);
-  },
-  mounted() {
-
-  },
   computed: {
     getLabel() {
       let label
@@ -69,7 +51,20 @@ export default {
     myEventHandler() {
       this.isLargeDevice = window.innerWidth >= this.responsiveSize
     }
-  }
+  },
+  created() {
+
+    for (let i = 2; i < this.titles.length; i++) {
+      this.indices.push(i)
+    }
+
+    this.myEventHandler()
+
+    window.addEventListener("resize", this.myEventHandler)
+  },
+  destroyed() {
+    window.removeEventListener("resize", this.myEventHandler);
+  },
 }
 </script>
 

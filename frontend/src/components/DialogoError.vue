@@ -7,17 +7,10 @@ export default {
       default: true
     },
   },
-  components: {},
   emits: [ 'update:visible' ],
   data() {
     return {
     }
-  },
-  created() {
-  },
-  mounted() {
-  },
-  computed: {
   },
   methods: {
     update(event) {

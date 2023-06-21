@@ -8,11 +8,7 @@ import DialogoError from '@/components/DialogoError.vue'
 import PanelTitulado from '@/components/PanelTitulado.vue'
 
 export default {
-  props: {
-
-  },
   components: { FormularioUsuario, Lista, DialogoError, PanelTitulado },
-  emits: [],
   data() {
     return {
       mostrarFormulario: false,
@@ -25,13 +21,6 @@ export default {
       { campo: 'email', title: 'e-mail', styles: '' }],
       camposDeBusqueda: ['tip', 'nombreCompleto', 'empleo', 'email'],
     }
-  },
-  updated() {
-  },
-  created() {
-    this.getUsuarios()
-  },
-  mounted() {
   },
   computed: {
     ...mapState(useUsuariosStore, ['isAdmin', 'loadingUsuariosStore', 'erroredUsuariosStore', 'listaUsuarios', 'usuarioSeleccionado']),
@@ -93,7 +82,10 @@ export default {
     gestionarErrores(visible) {
       if (!visible) this.resetEstadoUsuariosStore()
     },
-  }
+  },
+  created() {
+    this.getUsuarios()
+  },
 }
 </script>
 

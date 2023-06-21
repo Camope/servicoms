@@ -8,7 +8,6 @@ import DialogoEstadistica from '@/components/DialogoEstadistica.vue'
 export default {
   props: [],
   components: { MenuDesplegable, DialogoEstadistica },
-  emits: [],
   data() {
     return {
       logoutMenuTemplate: {
@@ -38,14 +37,6 @@ export default {
         this.menuTemplate = this.logoutMenuTemplate
       }
     }
-  },
-  created() {
-    if (this.isLoggedIn) {
-      this.configuraLoginMenuTemplate()
-    }
-    this.menuTemplate = this.isLoggedIn ? this.loginMenuTemplate : this.logoutMenuTemplate
-  },
-  mounted() {
   },
   computed: {
     ...mapState(useUsuariosStore, ['usuarioLogueado', 'isLoggedIn', 'isAdmin']),
@@ -102,8 +93,13 @@ export default {
       }
 
     }
-
-  }
+  },
+  created() {
+    if (this.isLoggedIn) {
+      this.configuraLoginMenuTemplate()
+    }
+    this.menuTemplate = this.isLoggedIn ? this.loginMenuTemplate : this.logoutMenuTemplate
+  },
 }
 </script>
 

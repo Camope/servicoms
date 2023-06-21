@@ -12,7 +12,6 @@ export default {
     },
   },
   components: { EncabezadoLista, ElementoLista },
-  emits: [],
   data() {
     return {
       configList: [{ campo: 'tip', title: 'TIP', styles: 'max-width: 10rem; justify-content: center;' },
@@ -20,13 +19,6 @@ export default {
       { campo: 'empleo', title: 'Empleo', styles: 'max-width: 10rem;' },
       { campo: 'email', title: 'e-mail', styles: null }],
     }
-  },
-  updated() {
-  },
-  created() {
-    this.getSolicitantesPorComision(this.comision)
-  },
-  mounted() {
   },
   computed: {
     ...mapState(useSolicitudesStore, ['listaDeSolicitantes', 'loadingSolicitudesStore']),
@@ -56,7 +48,10 @@ export default {
       tempLink.click()
       URL.revokeObjectURL(tempLink)
     }
-  }
+  },
+  created() {
+    this.getSolicitantesPorComision(this.comision)
+  },
 }
 </script>
 

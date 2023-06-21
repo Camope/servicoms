@@ -15,17 +15,10 @@ export default {
       default: ''
     }
   },
-  components: {},
   emits: ['click', 'search'],
   data() {
     return {
     }
-  },
-  created() {
-  },
-  mounted() {
-  },
-  computed: {
   },
   methods: {
     click(event) {

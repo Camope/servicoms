@@ -18,7 +18,6 @@ export default {
     }
   },
   components: { FormularioComision, Lista, DialogoError, PanelTitulado },
-  emits: [],
   data() {
     return {
       mostrarFormulario: false,
@@ -31,16 +30,6 @@ export default {
       { campo: 'estado', title: 'Estado', styles: 'max-width: 10rem; justify-content: center;' }],
       camposDeBusqueda: ['puesto', 'empleo', 'especialidad', 'localidad'],
     }
-  },
-  updated() {
-  },
-  created() {
-    this.getComisiones()
-    if(this.filtrar){ 
-      this.getSolicitudesPorUsuario(this.usuarioLogueado._links.self.href)
-    }
-  },
-  mounted() {
   },
   computed: {
     ...mapState(useUsuariosStore, ['usuarioLogueado', 'isLoggedIn', 'isAdmin']),
@@ -98,7 +87,13 @@ export default {
     gestionarErrores(event) {
       if (!event) this.resetEstadoComisionesStore()
     }
-  }
+  },
+  created() {
+    this.getComisiones()
+    if(this.filtrar){ 
+      this.getSolicitudesPorUsuario(this.usuarioLogueado._links.self.href)
+    }
+  },
 }
 </script>
 

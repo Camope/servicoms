@@ -7,7 +7,6 @@ export default {
       type: Object
     },
   },
-  components: {},
   emits: ['cancelar', 'guardar', 'borrar'],
   data() {
     return {
@@ -20,14 +19,6 @@ export default {
     usuario(nuevoUsuario) {
       this.usuarioTemp = { ...this.usuario }
     }
-  },
-  updated() {
-  },
-  created() {
-    this.nuevo = this.usuario ? false : true
-    this.usuarioTemp = this.nuevo ? {} : { ...this.usuario }
-  },
-  mounted() {
   },
   computed: {
     empleos() {
@@ -58,7 +49,11 @@ export default {
     borrar() {
       this.$emit('borrar')
     }
-  }
+  },
+  created() {
+    this.nuevo = this.usuario ? false : true
+    this.usuarioTemp = this.nuevo ? {} : { ...this.usuario }
+  },
 }
 </script>
 

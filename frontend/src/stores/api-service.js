@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-const host = 'https://servicomsapi-camorpe.b4a.run/api'// 'http://localhost:8080/api'
+const host = 'https://servicomsapi-camorpe.b4a.run/api'
 const HTTP_TO_HTTPS_ENABLE = true
 
 function apiRequest(path, method, body) {

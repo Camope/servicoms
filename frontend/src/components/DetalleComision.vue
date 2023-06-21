@@ -11,23 +11,12 @@ import DialogoError from '@/components/DialogoError.vue'
 export default {
   props: [],
   components: { FormularioComision, ListadoSolicitantes, DialogoError },
-  emits: [],
   data() {
     return {
       preguntaConfirmacion: false,
       mostrarFormulario: false,
       confirmacionPendiente: false,
     }
-  },
-  created() {
-    if (!this.comisionSeleccionada) {
-      this.$router.push({ name: "comisiones" })
-    }
-    if (this.isNotAdmin) {
-      this.getSolicitudesPorUsuario(this.usuarioLogueado._links.self.href)
-    }
-  },
-  mounted() {
   },
   computed: {
     ...mapState(useUsuariosStore, ['usuarioLogueado', 'isLoggedIn', 'isAdmin', 'isNotAdmin']),
@@ -119,7 +108,15 @@ export default {
         this.volver()
       }
     },
-  }
+  },
+  created() {
+    if (!this.comisionSeleccionada) {
+      this.$router.push({ name: "comisiones" })
+    }
+    if (this.isNotAdmin) {
+      this.getSolicitudesPorUsuario(this.usuarioLogueado._links.self.href)
+    }
+  },
 }
 </script>
 

@@ -29,28 +29,6 @@ export default {
       filtroPlaceholder: 'Aplicar Filtro',
     }
   },
-  updated() {
-  },
-  created() {
-    this.titles.forEach(t => {
-      this.iconIndexList.push(0)
-      this.filtros.push(t.title + ' asc.')
-      this.filtros.push(t.title + ' desc.')
-    })
-
-    this.myEventHandler()
-
-    window.addEventListener("resize", this.myEventHandler)
-
-  },
-  destroyed() {
-    window.removeEventListener("resize", this.myEventHandler);
-  },
-  mounted() {
-  },
-  computed: {
-
-  },
   methods: {
     cambiaOrden(index, requiredIndexIcon) {
 
@@ -81,7 +59,22 @@ export default {
     myEventHandler() {
       this.isLargeDevice = window.innerWidth >= this.responsiveSize
     }
-  }
+  },
+  created() {
+    this.titles.forEach(t => {
+      this.iconIndexList.push(0)
+      this.filtros.push(t.title + ' asc.')
+      this.filtros.push(t.title + ' desc.')
+    })
+
+    this.myEventHandler()
+
+    window.addEventListener("resize", this.myEventHandler)
+
+  },
+  destroyed() {
+    window.removeEventListener("resize", this.myEventHandler);
+  },
 }
 </script>
 

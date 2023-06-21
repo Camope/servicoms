@@ -9,7 +9,6 @@ export default {
       default: false
     },
   },
-  components: {},
   emits: ['update:visible'],
   data() {
     return {
@@ -24,10 +23,6 @@ export default {
     erroredComisionesStore(newError) {
       this.update(false)
     }
-  },
-  created() {
-  },
-  mounted() {
   },
   computed: {
     ...mapState(useComisionesStore, ['datosEstadisticos', 'loadingComisionesStore', 'erroredComisionesStore']),

@@ -11,20 +11,11 @@ export default {
     },
     hoverable: Boolean,
   },
-  components: {},
   emits: ['filterChange'],
   data() {
     return {
       hover: false
     }
-  },
-  updated() {
-  },
-  created() {
-  },
-  mounted() {
-  },
-  computed: {
   },
   methods: {
     click(event){

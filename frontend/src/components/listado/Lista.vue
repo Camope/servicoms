@@ -33,15 +33,6 @@ export default {
       sortRule: {},
     }
   },
-  updated() {
-  },
-  created() {
-    this.elementList = this.elements
-  },
-  destroyed() {
-  },
-  mounted() {
-  },
   computed: {
     page() {
       this.elementList = [...this.elements]
@@ -80,7 +71,10 @@ export default {
         }
       }
     }
-  }
+  },
+  created() {
+    this.elementList = this.elements
+  },
 }
 </script>
 
